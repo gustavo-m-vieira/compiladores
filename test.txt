@@ -12,3 +12,16 @@ INVALIDA "
 ' valida ' ' valida 2 '
 ' invalido
 ha' 
+$
+$@
+$@@
+$@@@
+$_@@
+$@aaaaaaa
+$@a1
+if gustavo >= 10
+for i in range 10
+$aaaas1
+'d''água'    "d'água"   'd\'água' 
+"luiz"" bobao"
+'luiz '' bobal'
