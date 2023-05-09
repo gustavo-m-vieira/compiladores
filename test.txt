@@ -4,6 +4,11 @@ aaaaaaa
 /* comentário *
 longo
 */ */
-" STRING VALIDA " " STRING VALIDA 2 "
+" STRING VALIDA " " STRING VALIDA 2 " 2
 " STRING
 INVALIDA "
+" string valida \" valida "
+' string valida \' valida '
+' valida ' ' valida 2 '
+' invalido
+ha' 

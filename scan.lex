@@ -14,10 +14,10 @@ MEIG <=
 IG ==
 DIF !=
 COMENTARIO1 "//".*[^\n]
-COMENTARIO2 "/*"([^*]|[\r\n]|("*"+([^*/]|[\r\n])))*"*/"
+COMENTARIO2 "/*"([^*]|[*][^/])*[*]?"/"
 
-STRING1 \"([^\n\"]|(.))*?\"
-
+STRING1 \"(\\.|[^\"\n])*\"
+STRING2 \'(\\.|[^\'\n])*\'
 
 FLOAT {DIGITO}+("."{DIGITO}+)?([eE][+-]?{DIGITO}+)?
 
@@ -28,7 +28,7 @@ enum TOKEN { _ID = 256, _FOR, _IF, _INT, _FLOAT, _MAIG, _MEIG, _IG, _DIF, _STRIN
     /* Padrões e ações. Nesta seção, comentários devem ter um tab antes */
 
 {COMENTARIO1}|{COMENTARIO2} { lexema = yytext; return _COMENTARIO; }
-{STRING1} { lexema = yytext; return _STRING; }
+{STRING1}|{STRING2} { lexema = yytext; return _STRING; }
 {WS}	{ /* ignora espaços, tabs e '\n' */ } 
 
 
