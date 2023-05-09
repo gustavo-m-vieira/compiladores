@@ -1,0 +1,9 @@
+aaaaaaa
+121212
+12.2 // comment // \*
+/* comentário *
+longo
+*/ */
+" STRING VALIDA " " STRING VALIDA 2 "
+" STRING
+INVALIDA "
