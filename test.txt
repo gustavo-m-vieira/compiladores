@@ -25,3 +25,13 @@ $aaaas1
 'd''água'    "d'água"   'd\'água' 
 "luiz"" bobao"
 'luiz '' bobal'
+` testeStringComexp ${var} expStringTeste`
+` testeStringComexp 
+${var}
+expStringTeste`
+
+ a = "Um ""texto \o/ //\\/* */" ;
+`  string ' "/*" '
+*/ //
+`;
+`Hora atual: ${agora} horas!`
