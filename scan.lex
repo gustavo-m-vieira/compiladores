@@ -30,10 +30,11 @@ STRING {STRING1}|{STRING11}
 STRING2 \`(\\.|[^\`])*/\$
 EXPR \$\{({IDSCIF}|{IDCIF})/\}
 STRING22 \}(\\.|[^\`])*\`
-STRING222 \`(\\.|[^\`])*\`
+STRING222 \`(\\.|[^\`\{])*\`
 
 enum TOKEN { _ID = 256, _FOR, _IF, _INT, _FLOAT, _MAIG, _MEIG, _IG, _DIF, _STRING, _STRING2, _COMENTARIO, _EXPR };
 
+INVALID_ID \$
 
 %%
     /* Padrões e ações. Nesta seção, comentários devem ter um tab antes */

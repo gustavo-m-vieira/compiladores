@@ -35,3 +35,4 @@ expStringTeste`
 */ //
 `;
 `Hora atual: ${agora} horas!`
+`Hora atual: $ horas!`
