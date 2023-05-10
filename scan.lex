@@ -24,6 +24,7 @@ FLOAT {DIGITO}+("."{DIGITO}+)?([eE][+-]?{DIGITO}+)?
 
 IDSCIF ([a-zA-Z]|"_")([a-zA-Z0-9_@])*
 IDCIF ("$"|("$@"{IDSCIF})){IDSCIF}*
+ID {IDSCIF}|{IDCIF}
 
 STRING {STRING1}|{STRING11}
 
@@ -34,7 +35,8 @@ STRING222 \`(\\.|[^\`\{])*\`
 
 enum TOKEN { _ID = 256, _FOR, _IF, _INT, _FLOAT, _MAIG, _MEIG, _IG, _DIF, _STRING, _STRING2, _COMENTARIO, _EXPR };
 
-INVALID_ID \$
+INVALID_ID1 ({ID}"@"+)
+INVALID_ID ("@"+|("@"+{INVALID_ID1})|(\$"@"+(\$)*)|({ID}\${ID}*)|({DIGITO}{ID}+)|({DIGITO}"@"+)|("@"+[_\$]+))
 
 %%
     /* Padrões e ações. Nesta seção, comentários devem ter um tab antes */
@@ -45,12 +47,14 @@ INVALID_ID \$
 {IF} { lexema = yytext; return _IF; }
 {WS}	{ /* ignora espaços, tabs e '\n' */ }
 
-{IDSCIF}|{IDCIF} { lexema = yytext; return _ID; }
+{INVALID_ID} { printf("Erro: Identificador inválido: %s\n", yytext); }
+{ID} { lexema = yytext; return _ID; }
 {STRING2} { std::string str(yytext); lexema = str.substr(1,str.length() -1 ); return _STRING2; }
 {EXPR} { std::string str(yytext); lexema = str.substr(2,str.length() -1 ); return _EXPR; }
 {STRING22} { std::string str(yytext); lexema = str.substr(1,str.length() -2 ); return _STRING2; }
 {STRING} { std::string str(yytext); lexema = str.substr(1,str.length() -2 ); return _STRING; }
 {STRING222} { std::string str(yytext); lexema = str.substr(1,str.length() -2 ); return _STRING2; }
+
 
 {DIGITO}+ { lexema = yytext; return _INT; }
 {FLOAT} { lexema = yytext; return _FLOAT; }

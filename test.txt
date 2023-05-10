@@ -36,3 +36,8 @@ expStringTeste`
 `;
 `Hora atual: ${agora} horas!`
 `Hora atual: $ horas!`
+1a
+$a $@ $_@ $@$ $@_
+if( $_a@8@ >= 1e-5 )
+1$a 2@ 1_@ 3$@_@
+@_ @ @@ @$ a@hj______@1
