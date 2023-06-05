@@ -1,8 +1,6 @@
 %{
   #include <string>
   #include <stdio.h>
-
-  string lexema;
 %}
 
 WS	[ \t\n]
@@ -41,29 +39,29 @@ INVALID_ID ("@"+|("@"+{INVALID_ID1})|(\$"@"+(\$)*)|({ID}\${ID}*)|({DIGITO}{ID}+)
 %%
     /* Padrões e ações. Nesta seção, comentários devem ter um tab antes */
 
-{COMENTARIO1}|{COMENTARIO2} { lexema = yytext; return _COMENTARIO; }
+{COMENTARIO1}|{COMENTARIO2} { yylval.c = yytext; return _COMENTARIO; }
 
-{FOR} { lexema = yytext; return _FOR; }
-{IF} { lexema = yytext; return _IF; }
+{FOR} { yylval.c = yytext; return _FOR; }
+{IF} { yylval.c = yytext; return _IF; }
 {WS}	{ /* ignora espaços, tabs e '\n' */ }
 
 {INVALID_ID} { printf("Erro: Identificador inválido: %s\n", yytext); }
-{ID} { lexema = yytext; return _ID; }
-{STRING2} { std::string str(yytext); lexema = str.substr(1,str.length() -1 ); return _STRING2; }
-{EXPR} { std::string str(yytext); lexema = str.substr(2,str.length() -1 ); return _EXPR; }
-{STRING22} { std::string str(yytext); lexema = str.substr(1,str.length() -2 ); return _STRING2; }
-{STRING} { std::string str(yytext); lexema = str.substr(1,str.length() -2 ); return _STRING; }
-{STRING222} { std::string str(yytext); lexema = str.substr(1,str.length() -2 ); return _STRING2; }
+{ID} { yylval.c = yytext; return _ID; }
+{STRING2} { std::string str(yytext); yylval.c = str.substr(1,str.length() -1 ); return _STRING2; }
+{EXPR} { std::string str(yytext); yylval.c = str.substr(2,str.length() -1 ); return _EXPR; }
+{STRING22} { std::string str(yytext); yylval.c = str.substr(1,str.length() -2 ); return _STRING2; }
+{STRING} { std::string str(yytext); yylval.c = str.substr(1,str.length() -2 ); return _STRING; }
+{STRING222} { std::string str(yytext); yylval.c = str.substr(1,str.length() -2 ); return _STRING2; }
 
 
-{DIGITO}+ { lexema = yytext; return _INT; }
-{FLOAT} { lexema = yytext; return _FLOAT; }
-{MAIG} { lexema = yytext; return _MAIG; }
-{MEIG} { lexema = yytext; return _MEIG; }
-{IG} { lexema = yytext; return _IG; }
-{DIF} { lexema = yytext; return _DIF; }
+{DIGITO}+ { yylval.c = yytext; return _INT; }
+{FLOAT} { yylval.c = yytext; return _FLOAT; }
+{MAIG} { yylval.c = yytext; return _MAIG; }
+{MEIG} { yylval.c = yytext; return _MEIG; }
+{IG} { yylval.c = yytext; return _IG; }
+{DIF} { yylval.c = yytext; return _DIF; }
 
-.       { lexema = yytext; return *yytext;
+.       { yylval.c = yytext; return *yytext;
           /* Essa deve ser a última regra. Dessa forma qualquer caractere isolado será retornado pelo seu código ascii. */ }
 
 %%
