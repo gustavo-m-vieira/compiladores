@@ -58,19 +58,37 @@ S : CMDs  {/* imprime_codigo( resolve_enderecos( $1.c + "." ) ); cout << endl;*/
 
 CMDs : CMD CMDs             { $$.c = $1.c + $2.c; }
      | DECL_VAR ';' CMDs    { $$.c = $1.c + $3.c; }
-     | DECL_FUN CMDs        { $$.c = $1.c + $2.c; } 
+     | DECL_FUN CMDs        { $$.c = $1.c + $2.c; }   
      |                      { $$.c.clear(); }
      ;
      
 CMD : CMD_FOR
     | CMD_IF
     | CMD_WHILE
+    | CMD_DO_WHILE
+    | CMD_SWITCH_CASE
     | E_V ';'
     | '{' CMDs '}'      { $$ = $2; }
     | ';'               { $$.c.clear(); }
     ;
 
-CMD_WHILE : _WHILE '(' E ')' CMD;
+CMD_SWITCH_CASE : _SWITCH '(' E ')' '{' CASEs '}' 
+                | _SWITCH '(' E ')' '{' CASEs _DEFAULT '}' 
+                ;
+
+CASEs : CASE CASEs
+      | CASE
+      ;
+
+CASE : _CASE E ':' CMDs
+    | _CASE E ':' CMDs _BREAK CMDs ';'
+    ;
+
+CMD_WHILE : _WHILE '(' E ')' CMD
+          | _WHILE '(' E ')' '{' CMDs _BREAK CMDs '}' ';'
+          ;
+
+CMD_DO_WHILE : _DO CMD _WHILE '(' E ')' ';';
     
 CMD_IF : _IF '(' E ')' CMD _ELSE CMD
          {  string lbl_fim = gera_label( "fim_if" ), 
@@ -99,6 +117,8 @@ DECL_VAR : _LET VARs    { $$ = $2; }
          
 DECL_FUN : _FUNCTION _ID '(' ')' '{' CMDs '}' 
          | _FUNCTION _ID '(' PARAMs ')' '{' CMDs '}'
+         | _FUNCTION _ID '(' ')' '{' CMDs _RETURN CMDs '}'
+         | _FUNCTION _ID '(' PARAMs ')' '{' CMDs _RETURN CMDs '}'
          ;
          
 PARAMs : PARAM ','PARAMs
@@ -167,6 +187,8 @@ void yyerror( const char* msg ) {
        << "Perto de : '" << yylval.c[0] << "'" << endl
        << "Linha: " << yylval.linha << endl
         << "Coluna: " << yylval.coluna << endl;
+  
+  exit(1);
 }
 
 vector<string> operator+( vector<string> a, vector<string> b ) {
