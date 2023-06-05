@@ -11,6 +11,8 @@ using namespace std;
 
 struct Atributos {
   vector<string> c;
+  int linha;
+  int coluna;
 };
 
 vector<string> codigo;
@@ -21,8 +23,8 @@ vector<string> operator+( vector<string> a, string b );
 string gera_label( string prefixo );
 vector<string> resolve_enderecos( vector<string> entrada );
 
-int linha = 1;
-int coluna = 1;
+// int linha = 1;
+// int coluna = 1;
 
 // Tipo dos atributos: YYSTYPE é o tipo usado para os atributos.
 #define YYSTYPE Atributos
@@ -51,7 +53,7 @@ void yyerror( const char* );
 
 %%
 
-S : CMDs  { imprime_codigo( resolve_enderecos( $1.c + "." ) ); cout << endl;}
+S : CMDs  {/* imprime_codigo( resolve_enderecos( $1.c + "." ) ); cout << endl;*/}
   ;
 
 CMDs : CMD CMDs             { $$.c = $1.c + $2.c; }
@@ -62,10 +64,13 @@ CMDs : CMD CMDs             { $$.c = $1.c + $2.c; }
      
 CMD : CMD_FOR
     | CMD_IF
+    | CMD_WHILE
     | E_V ';'
     | '{' CMDs '}'      { $$ = $2; }
     | ';'               { $$.c.clear(); }
     ;
+
+CMD_WHILE : _WHILE '(' E ')' CMD;
     
 CMD_IF : _IF '(' E ')' CMD _ELSE CMD
          {  string lbl_fim = gera_label( "fim_if" ), 
@@ -159,7 +164,9 @@ vector<string> concatena ( vector<string> a, vector<string> b ) {
 
 void yyerror( const char* msg ) {
   cout << endl << "Erro: " << msg << endl
-       << "Perto de : '" << yylval.c[0] << "'" << endl;
+       << "Perto de : '" << yylval.c[0] << "'" << endl
+       << "Linha: " << yylval.linha << endl
+        << "Coluna: " << yylval.coluna << endl;
 }
 
 vector<string> operator+( vector<string> a, vector<string> b ) {
