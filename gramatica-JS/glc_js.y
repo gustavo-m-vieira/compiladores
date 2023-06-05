@@ -127,24 +127,46 @@ PARAMs : PARAM ','PARAMs
        
 PARAM : _ID '=' E
       | _ID
+      | _ID '=' '{' DECL_OBJ '}'
       ;
-     
+
+    
 VARs : VAR ',' VARs     { $$.c = $1.c + $3.c; }
      | VAR
      ;
+
+DECL_OBJ : DECL_OBJ_I ',' DECL_OBJ    { $$.c = $1.c + $3.c; }
+         | DECL_OBJ_I
+         |
+         ;
+
+DECL_OBJ_I : _ID ':' E
+        | _ID ':' '{' DECL_OBJ '}'
+        | _ID
                     
 VAR : _ID '=' E     { $$.c = $1.c + "&" + $1.c + $3.c + "=" + "^"; }
     | _ID           { $$.c = $1.c + "&"; }
+    | _ID '=' '{' DECL_OBJ '}'
     ;
     
 CTEs : _ID '=' E ',' CTEs
      | _ID '=' E
+    //  | _ID '=' IDs ',' CTEs
+    //  | _ID '=' IDs
+     | _ID '=' '{' DECL_OBJ '}' ',' CTEs
+     | _ID '=' '{' DECL_OBJ '}'
+     | '{' DECL_OBJ '}' '=' E
+     
      ;
   
 E_V : E_V ',' E_V
-    | ATRIB
+    | IDs '=' E
+    | E
     ;
   
+IDs : _ID '.' IDs
+    | _ID
+    ;
   
 ATRIB : _ID '=' E   { $$.c = $1.c + $3.c + "=" + "^"; }
       | E
