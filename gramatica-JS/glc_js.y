@@ -40,7 +40,7 @@ void yyerror( const char* );
 %}
 
 // Tokens
-%token	 _ID _NUM _STRING _LET _VAR _CONST _FOR _FUNCTION _IF _ELSE _RETURN _BREAK _CONTINUE _COMENTARIO _MAIG _MEIG _IG _DIF _DO _WHILE _SWITCH _CASE _DEFAULT _EXPAND _STRING2 _EXPR _PP _MM
+%token	 _ID _NUM _STRING _LET _VAR _CONST _FOR _FUNCTION _IF _ELSE _RETURN _BREAK _CONTINUE _COMENTARIO _MAIG _MEIG _IG _DIF _DO _WHILE _SWITCH _CASE _DEFAULT _EXPAND _STRING2 _EXPR
 
 %start  S
 
@@ -58,7 +58,8 @@ S : CMDs  {/* imprime_codigo( resolve_enderecos( $1.c + "." ) ); cout << endl;*/
 
 CMDs : CMD CMDs             { $$.c = $1.c + $2.c; }
      | DECL_VAR ';' CMDs    { $$.c = $1.c + $3.c; }
-     | DECL_FUN CMDs        { $$.c = $1.c + $2.c; }   
+     | DECL_FUN CMDs        { $$.c = $1.c + $2.c; }  
+     | ATRIB ';' CMDs       { $$.c = $1.c + $3.c; } 
      |                      { $$.c.clear(); }
      ;
      
@@ -152,6 +153,7 @@ LIST : LIST_I ',' LIST    { $$.c = $1.c + $3.c; }
 LIST_I : E
        | '{' DECL_OBJ '}'
        | '[' LIST ']'
+       |
        ;
                     
 VAR : _ID '=' E     { $$.c = $1.c + "&" + $1.c + $3.c + "=" + "^"; }
@@ -162,8 +164,6 @@ VAR : _ID '=' E     { $$.c = $1.c + "&" + $1.c + $3.c + "=" + "^"; }
     
 CTEs : _ID '=' E ',' CTEs
      | _ID '=' E
-    //  | _ID '=' IDs ',' CTEs
-    //  | _ID '=' IDs
      | _ID '=' '{' DECL_OBJ '}' ',' CTEs
      | _ID '=' '{' DECL_OBJ '}'
      | _ID '=' '[' E ']' ',' CTEs
@@ -181,9 +181,18 @@ IDs : _ID '.' IDs
     | _ID
     ;
   
-ATRIB : _ID '=' E   { $$.c = $1.c + $3.c + "=" + "^"; }
+ATRIB : ATRIBUTO '=' E   { $$.c = $1.c + $3.c + "=" + "^"; }
       | E
+      | '{' DECL_OBJ '}'
+      | '[' LIST ']'
       ;
+
+ATRIBUTO : ATRIBUTO '[' E ']'
+    | _ID '[' E ']'
+    | ATRIBUTO '.' Gs
+    | _ID
+    ;
+
 
 E : E '<' E         { $$.c = $1.c + $3.c + "<"; }
   | E '*' E         { $$.c = $1.c + $3.c + "*"; }
@@ -196,13 +205,23 @@ E : E '<' E         { $$.c = $1.c + $3.c + "<"; }
   | E '(' ')'
   | E '(' ARGs ')'
   | E '+''+'
+  | E '.' Gs
   | F
+  ;
+
+Gs : G '.' Gs
+  | G
+  ;
+
+G : _ID
+  | _STRING
   ;
 
 F : _ID     { $$.c = $1.c + "@"; }
   | _NUM
   | _STRING
   | '(' E_V ')' { $$ = $2; }   
+  | '{' DECL_OBJ '}'
   ;
 
 
