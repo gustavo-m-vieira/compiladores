@@ -128,7 +128,6 @@ PARAMs : PARAM ','PARAMs
        
 PARAM : _ID '=' E
       | _ID
-      | _ID '=' '{' DECL_OBJ '}'
       ;
 
     
@@ -158,16 +157,10 @@ LIST_I : E
                     
 VAR : _ID '=' E     { $$.c = $1.c + "&" + $1.c + $3.c + "=" + "^"; }
     | _ID           { $$.c = $1.c + "&"; }
-    | _ID '=' '{' DECL_OBJ '}'
-    | _ID '=' '[' LIST ']'
     ;
     
 CTEs : _ID '=' E ',' CTEs
      | _ID '=' E
-     | _ID '=' '{' DECL_OBJ '}' ',' CTEs
-     | _ID '=' '{' DECL_OBJ '}'
-     | _ID '=' '[' E ']' ',' CTEs
-     | _ID '=' '[' E ']'
      | '{' DECL_OBJ '}' '=' E
      
      ;
@@ -183,8 +176,6 @@ IDs : _ID '.' IDs
   
 ATRIB : ATRIBUTO '=' E   { $$.c = $1.c + $3.c + "=" + "^"; }
       | E
-      | '{' DECL_OBJ '}'
-      | '[' LIST ']'
       ;
 
 ATRIBUTO : ATRIBUTO '[' E ']'
@@ -222,6 +213,7 @@ F : _ID     { $$.c = $1.c + "@"; }
   | _STRING
   | '(' E_V ')' { $$ = $2; }   
   | '{' DECL_OBJ '}'
+  | '[' LIST ']'
   ;
 
 

@@ -56,3 +56,12 @@ let y = "uma string";
 let a = 0, b;
 for( let i = a + b[x+1]; i < f(a); i++ )
   b = b + 1;
+
+let a = { b:7, c : {} };
+let v = [ 1, 2, { g: b }, x+1 ];
+
+f(9, {} ), v = 0;
+v[i][9].g = v[9]( h, [] ).n();
+for( ; {}.b > 0; k++ ) ;
+for(;;) {}
+for(;;) { { []; }  }

@@ -1,8 +1,12 @@
-let a = { b:7, c : {} };
-let v = [ 1, 2, { g: b }, x+1 ];
+let f = function( n = 0 ) {
+  if( n > 0 )
+    return (n)*fat(n-1);
+  else
+    return 1;
+};
 
-f(9, {} ), v = 0;
-v[i][9].g = v[9]( h, [] ).n();
-for( ; {}.b > 0; k++ ) ;
-for(;;) {}
-for(;;) { { []; }  }
+f( function() {} );
+
+(function( a ){
+    return a;
+})( 8 );
