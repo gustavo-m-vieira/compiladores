@@ -40,7 +40,7 @@ void yyerror( const char* );
 %}
 
 // Tokens
-%token	 _ID _NUM _STRING _LET _VAR _CONST _FOR _FUNCTION _IF _ELSE _RETURN _BREAK _CONTINUE _COMENTARIO _MAIG _MEIG _IG _DIF _DO _WHILE _SWITCH _CASE _DEFAULT _EXPAND _STRING2 _EXPR _PLUSPLUS
+%token	 _ID _NUM _STRING _LET _VAR _CONST _FOR _FUNCTION _IF _ELSE _RETURN _BREAK _CONTINUE _COMENTARIO _MAIG _MEIG _IG _DIF _DO _WHILE _SWITCH _CASE _DEFAULT _EXPAND _STRING2 _EXPR _PP _MM
 
 %start  S
 
@@ -143,10 +143,21 @@ DECL_OBJ : DECL_OBJ_I ',' DECL_OBJ    { $$.c = $1.c + $3.c; }
 DECL_OBJ_I : _ID ':' E
         | _ID ':' '{' DECL_OBJ '}'
         | _ID
+        ;
+
+LIST : LIST_I ',' LIST    { $$.c = $1.c + $3.c; }
+     | LIST_I
+     ;
+
+LIST_I : E
+       | '{' DECL_OBJ '}'
+       | '[' LIST ']'
+       ;
                     
 VAR : _ID '=' E     { $$.c = $1.c + "&" + $1.c + $3.c + "=" + "^"; }
     | _ID           { $$.c = $1.c + "&"; }
     | _ID '=' '{' DECL_OBJ '}'
+    | _ID '=' '[' LIST ']'
     ;
     
 CTEs : _ID '=' E ',' CTEs
@@ -155,6 +166,8 @@ CTEs : _ID '=' E ',' CTEs
     //  | _ID '=' IDs
      | _ID '=' '{' DECL_OBJ '}' ',' CTEs
      | _ID '=' '{' DECL_OBJ '}'
+     | _ID '=' '[' E ']' ',' CTEs
+     | _ID '=' '[' E ']'
      | '{' DECL_OBJ '}' '=' E
      
      ;
@@ -182,11 +195,13 @@ E : E '<' E         { $$.c = $1.c + $3.c + "<"; }
   | E '[' E ']'
   | E '(' ')'
   | E '(' ARGs ')'
+  | E '+''+'
   | F
   ;
 
 F : _ID     { $$.c = $1.c + "@"; }
-  | _NUM     
+  | _NUM
+  | _STRING
   | '(' E_V ')' { $$ = $2; }   
   ;
 
@@ -207,8 +222,7 @@ vector<string> concatena ( vector<string> a, vector<string> b ) {
 void yyerror( const char* msg ) {
   cout << endl << "Erro: " << msg << endl
        << "Perto de : '" << yylval.c[0] << "'" << endl
-       << "Linha: " << yylval.linha << endl
-        << "Coluna: " << yylval.coluna << endl;
+       << "Linha: " << yylval.linha << ", coluna: " << yylval.coluna << endl;
   
   exit(1);
 }

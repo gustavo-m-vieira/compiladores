@@ -1,53 +1,8 @@
-var a, b=2;
+let a = { b:7, c : {} };
+let v = [ 1, 2, { g: b }, x+1 ];
 
-if (b > 3) {
-  a = 2 * 5;
-} else {
-  a = 3 * 5;
-}
-
-for (let i = 0; i < 5; i = i + 1) {
-  b = b + 3;
-}
-
-function xxx(a) {
-  return a;
-
-  log(b);
-}
-
-let obj = {};
-
-let obj2 = {
-  a: 5,
-  b: {
-    x: 73,
-    y: {},
-    z,
-  },
-  c
-};
-
-const obj3 = {
-  a: 5,
-  b: {
-    x: 73,
-    y: {},
-    z,
-  },
-  c
-};
-
-function y(a = { b: 12 }, za) {
-  return 1;
-}
-
-const {
-  a: {
-    c
-  }
-} = z;
-
-z.c = 12;
-
-const c = z.a.c;
+f(9, {} ), v = 0;
+v[i][9].g = v[9]( h, [] ).n();
+for( ; {}.b > 0; k++ ) ;
+for(;;) {}
+for(;;) { { []; }  }

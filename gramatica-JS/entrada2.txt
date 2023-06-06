@@ -1,0 +1,58 @@
+var a, b=2;
+
+if (b > 3) {
+  a = 2 * 5;
+} else {
+  a = 3 * 5;
+}
+
+for (let i = 0; i < 5; i = i + 1) {
+  b = b + 3;
+}
+
+function xxx(a) {
+  return a;
+
+  log(b);
+}
+
+let obj = {};
+
+let obj2 = {
+  a: 5,
+  b: {
+    x: 73,
+    y: {},
+    z,
+  },
+  c
+};
+
+const obj3 = {
+  a: 5,
+  b: {
+    x: 73,
+    y: {},
+    z,
+  },
+  c
+};
+
+function y(a = { b: 12 }, za) {
+  return 1;
+}
+
+const {
+  a: {
+    c
+  }
+} = z;
+
+z.c = 12;
+
+const a = 0, b = a + b;
+let y = "uma string";
+
+let a = 0, b;
+for( let i = a + b[x+1]; i < f(a); i++ )
+  b = b + 1;
