@@ -70,6 +70,7 @@ CMD : CMD_FOR
     | CMD_SWITCH_CASE
     | E_V ';'
     | '{' CMDs '}'      { $$ = $2; }
+    | _RETURN E ';'     
     | ';'               { $$.c.clear(); }
     ;
 
@@ -157,12 +158,20 @@ LIST_I : E
                     
 VAR : _ID '=' E     { $$.c = $1.c + "&" + $1.c + $3.c + "=" + "^"; }
     | _ID           { $$.c = $1.c + "&"; }
+    | '{' DECL_OBJ '}' '=' E
+    // | _ID '=' ANON_FUN
     ;
+
+ANON_FUN: _FUNCTION '(' ')' '{' CMDs '}'
+        | _FUNCTION '(' PARAMs ')' '{' CMDs '}'
+        | _FUNCTION '(' ')' '{' CMDs _RETURN CMDs '}'
+        | _FUNCTION '(' PARAMs ')' '{' CMDs _RETURN CMDs '}'
+        ;
     
 CTEs : _ID '=' E ',' CTEs
      | _ID '=' E
      | '{' DECL_OBJ '}' '=' E
-     
+     | _ID '=' ANON_FUN
      ;
   
 E_V : E_V ',' E_V
@@ -214,6 +223,7 @@ F : _ID     { $$.c = $1.c + "@"; }
   | '(' E_V ')' { $$ = $2; }   
   | '{' DECL_OBJ '}'
   | '[' LIST ']'
+  | ANON_FUN
   ;
 
 
