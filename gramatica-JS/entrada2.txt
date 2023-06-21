@@ -65,3 +65,18 @@ v[i][9].g = v[9]( h, [] ).n();
 for( ; {}.b > 0; k++ ) ;
 for(;;) {}
 for(;;) { { []; }  }
+
+f( function() {} );
+
+
+let f = function( n = 0 ) {
+  if( n > 0 )
+    return (n)*fat(n-1);
+  else
+    return 1;
+};
+
+
+(function( a ){
+    return a;
+})( 8 );
