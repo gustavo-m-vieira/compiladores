@@ -1,4 +1,6 @@
-let a = 1, b, x;
-x = b = a * (8 + 1.1);
-let c = "hello ";
-c += ", " + 'world' + '!';
+let a = [], b = [], c = [];
+let i, j, k;
+for( i = 0; i < 4; i = i + 1 ) {
+  a[i] = [];
+  b[i] = [];
+}

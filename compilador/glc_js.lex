@@ -22,6 +22,7 @@ FPSETA ")"[\n\t ]*"=>"
 
 {STRING_DUPLA}|{STRING_SIMPLES} 	{ acerta_coluna(); return _STRING; }
 {NUM}   	{ acerta_coluna(); return _NUM; }
+-{NUM}  	{ acerta_coluna(); return _NUM; }
 
 "let"       { acerta_coluna(); return _LET; }
 "var"       { acerta_coluna(); return _VAR; }
@@ -31,10 +32,13 @@ FPSETA ")"[\n\t ]*"=>"
 "else"        { acerta_coluna(); return _ELSE; }
 "function"  { acerta_coluna(); return _FUNCTION; }
 "return"    { acerta_coluna(); return _RETURN; }
+"while"     { acerta_coluna(); return _WHILE; }
 
 "++"        { acerta_coluna(); return _INC; }
 "+="       { acerta_coluna(); return _MAIS_IGUAL; }
+"-="       { acerta_coluna(); return _MENOS_IGUAL; }
 "=>"        { acerta_coluna(); return _SETA; }
+"=="        { acerta_coluna(); return _IGUAL_IGUAL; }
 {FPSETA}    { acerta_coluna(); return _FPSETA; }
 
 {ID}		{ acerta_coluna(); return _ID; }
