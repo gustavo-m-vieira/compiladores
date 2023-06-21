@@ -81,7 +81,7 @@ CMD : CMD_FOR
     | CMD_IF
     | CMD_WHILE
     | E_V ';'
-    | '{' NOVO_ESCOPO CMD CMDs '}' DESTROI_ESCOPO     { $$.c = "<{" + $3.c + "}>"; }    
+    | '{' CMD CMDs '}'     { $$.c = "<{" + $3.c + "}>"; }    
     | '{' '}'          {  $$.c.clear(); $$.c.push_back("<{}>"); }
     | ';'              { $$.c.clear(); }     
     | _RETURN ';'
@@ -209,8 +209,16 @@ E   : _ID '=' EE
     | _ID _SETA '{' CMD CMDs '}'
     | '(' _FPSETA EE
     | '(' PARAMs _FPSETA EE
-    | EE '.' _ID '=' EE
+    | F '.' _ID '=' EE { $$.c = $1.c + "@" + $3.c + $5.c + "[=]" + "^"; }
+    | F '.' _ID _MAIS_IGUAL EE
+    { 
+        $$.c =  $1.c + "@" + $3.c + $1.c + "@" + $3.c + "[@]" + $5.c + "+" + "=" + "^";
+    }
     | F '[' EE ']' '=' EE { $$.c = $1.c + $3.c + $6.c + "[=]" + "^"; }
+    | F '[' EE ']' _MAIS_IGUAL EE
+    { 
+        $$.c =  // pensar nisso amanha
+    }
     | EE '<' EE        { $$.c = $1.c + $3.c + "<"; }
     | EE '*' EE        { $$.c = $1.c + $3.c + "*"; }
     | EE '+' EE        { $$.c = $1.c + $3.c + "+"; }
@@ -236,6 +244,7 @@ F : _ID     { $$.c = $1.c + "@"; }
   | '{' CAMPOs '}' 
   | EE '.' _ID
   | FUNC_ANON
+  | F '.' _ID { $$.c = $1.c + "@" + $3.c; }
   ;
 
 FUNC_ANON : _FUNCTION '(' ')' '{' CMDs '}' 
@@ -262,8 +271,6 @@ vector<string> concatena ( vector<string> a, vector<string> b ) {
 }
 
 void yyerror( const char* msg ) {
-    cout << "\n\n\n" << ts.size() << "\n\n\n\n" << endl;
-
     cout << endl << "Erro: " << msg << endl
         << "Perto de : '" << yylval.c[0] << "'" << endl
         << "Linha: " << yylval.linha << ", coluna: " << yylval.coluna << endl;
