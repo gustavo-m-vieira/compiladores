@@ -1,1 +1,1 @@
-a & a 1 = ^ b & x & x b a @ 8 1.1 + * = = ^ c & c "hello " = ^ c c @ ", " 'world' + '!' + + = ^ .
+obj & obj {} = ^ i & i -2 = ^ obj @ @ nome "Manoel" [=] ^ obj @ @ nums [] [=] ^ obj @ @ nums 0 12 [=] ^ obj @ @ nums 3 12 [=] ^ obj @ @ nums 3 obj @ @ nums 3 [@] 1 + = ^ obj @ @ nums i @ 3 + 45 [=] ^ obj @ 'nom' 'e' + obj @ @ nome "!" + [=] ^ .

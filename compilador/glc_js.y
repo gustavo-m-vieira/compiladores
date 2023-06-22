@@ -207,6 +207,7 @@ E   : _ID '=' EE
     }
     | _ID _SETA EE
     | _ID _SETA '{' CMD CMDs '}'
+    | EE _INC { cout << $1.c[0] << "\t" << $1.c[1] << endl; $$.c = $1.c + $1.c + "@" + "1" + "+" + "="; }  
     | '(' _FPSETA EE
     | '(' PARAMs _FPSETA EE
     | F '.' _ID '=' EE { $$.c = $1.c + "@" + $3.c + $5.c + "[=]" + "^"; }
@@ -217,7 +218,7 @@ E   : _ID '=' EE
     | F '[' EE ']' '=' EE { $$.c = $1.c + $3.c + $6.c + "[=]" + "^"; }
     | F '[' EE ']' _MAIS_IGUAL EE
     { 
-        $$.c =  // pensar nisso amanha
+        // $$.c =  // pensar nisso amanha
     }
     | EE '<' EE        { $$.c = $1.c + $3.c + "<"; }
     | EE '*' EE        { $$.c = $1.c + $3.c + "*"; }
@@ -226,8 +227,7 @@ E   : _ID '=' EE
     | EE '/' EE        { $$.c = $1.c + $3.c + "/"; }
     | EE '>' EE        { $$.c = $1.c + $3.c + ">"; }
     | EE '%' EE        { $$.c = $1.c + $3.c + "%"; }
-    | EE _IGUAL_IGUAL EE     { $$.c = $1.c + $3.c + "=="; }    
-    | _INC EE         { $$.c = $2.c + $2.c + "+"; }
+    | EE _IGUAL_IGUAL EE     { $$.c = $1.c + $3.c + "=="; }
     | F
     ;
 
@@ -238,7 +238,6 @@ F : _ID     { $$.c = $1.c + "@"; }
   | F '(' ')'
   | F '[' EE ']'
   | F '(' ARGs ')'
-  | F _INC
   | '[' ']' { $$.c.clear(); $$.c.push_back("[]");}
   | '[' ARGs ']'
   | '{' CAMPOs '}' 
