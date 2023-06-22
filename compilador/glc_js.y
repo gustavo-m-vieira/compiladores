@@ -35,6 +35,7 @@ vector<string> operator+( vector<string> a, string b );
 vector<string> operator+( string a, vector<string> b );
 string gera_label( string prefixo );
 vector<string> resolve_enderecos( vector<string> entrada );
+bool includesChar(const std::string& str, char ch);
 
 int linha = 1;
 int coluna = 1;
@@ -215,13 +216,15 @@ E   : _ID '=' EE
     }  
     | '(' _FPSETA EE
     | '(' PARAMs _FPSETA EE
-    | F '.' _ID '=' EE { $$.c = $1.c + "@" + $3.c + $5.c + "[=]" + "^"; }
+    | F '.' _ID '=' EE { $$.c = $1.c + $3.c + $5.c + "[=]" + "^"; }
     | F '.' _ID _MAIS_IGUAL EE
     { 
         $$.c =  $1.c + "@" + $3.c + $1.c + "@" + $3.c + "[@]" + $5.c + "+" + "=" + "^";
     }
     | F '[' EE ']' '=' EE { $$.c = $1.c + $3.c + $6.c + "[=]" + "^"; }
+    | F '.' _ID '[' EE ']' '=' EE
     | F '[' EE ']' _MAIS_IGUAL EE
+    | F '.' _ID '[' EE ']' _MAIS_IGUAL EE
     { 
         // $$.c =  // pensar nisso amanha
     }
@@ -237,7 +240,14 @@ E   : _ID '=' EE
     ;
 
 F : _ID     { $$.c = $1.c + "@"; }
-  | _NUM    { $$.c = $1.c; }
+  | _NUM    {
+    if(includesChar($1.c[0], '-') || includesChar($1.c[0], '+')) {
+      $$.c.clear(); $$.c.push_back("'" + $1.c[0] + "'");
+    }
+    else {
+      $$.c = $1.c;
+    }
+  }
   | _STRING { $$.c = $1.c; }
   | '(' EE ')' { $$ = $2; } 
   | F '(' ')'
@@ -246,9 +256,8 @@ F : _ID     { $$.c = $1.c + "@"; }
   | '[' ']' { $$.c.clear(); $$.c.push_back("[]");}
   | '[' ARGs ']'
   | '{' CAMPOs '}' 
-  | EE '.' _ID
+  | F '.' _ID { $$.c = $1.c + $3.c + "[@]"; }
   | FUNC_ANON
-  | F '.' _ID { $$.c = $1.c + "@" + $3.c; }
   ;
 
 FUNC_ANON : _FUNCTION '(' ')' '{' CMDs '}' 
@@ -268,6 +277,10 @@ ARGs : EE ',' ARGs
 %%
 
 #include "lex.yy.c"
+
+bool includesChar(const std::string& str, char ch) {
+    return str.find(ch) != std::string::npos;
+}
 
 vector<string> concatena ( vector<string> a, vector<string> b ) {
   a.insert( a.end(), b.begin(), b.end() );

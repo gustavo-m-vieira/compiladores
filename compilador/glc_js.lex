@@ -21,8 +21,9 @@ FPSETA ")"[\n\t ]*"=>"
 "\n"    { linha++; coluna = 1; }
 
 {STRING_DUPLA}|{STRING_SIMPLES} 	{ acerta_coluna(); return _STRING; }
-{NUM}   	{ acerta_coluna(); return _NUM; }
--{NUM}  	{ acerta_coluna(); return _NUM; }
+{NUM}       { acerta_coluna(); return _NUM; }
+"+"{NUM}      { acerta_coluna(); return _NUM; }
+"-"{NUM}   	{ acerta_coluna(); return _NUM; }
 
 "let"       { acerta_coluna(); return _LET; }
 "var"       { acerta_coluna(); return _VAR; }
