@@ -81,7 +81,7 @@ CMD : CMD_FOR
     | CMD_IF
     | CMD_WHILE
     | E_V ';'
-    | '{' CMD CMDs '}'     { $$.c = "<{" + $3.c + "}>"; }    
+    | '{' CMD CMDs '}'     { $$.c = "<{" + $2.c + $3.c + "}>"; }    
     | '{' '}'          {  $$.c.clear(); $$.c.push_back("<{}>"); }
     | ';'              { $$.c.clear(); }     
     | _RETURN ';'
