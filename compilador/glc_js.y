@@ -207,7 +207,12 @@ E   : _ID '=' EE
     }
     | _ID _SETA EE
     | _ID _SETA '{' CMD CMDs '}'
-    | EE _INC { cout << $1.c[0] << "\t" << $1.c[1] << endl; $$.c = $1.c + $1.c + "@" + "1" + "+" + "="; }  
+    | EE _INC {
+      if ( $1.c[$1.c.size()-1] == "@" ) {
+            $1.c.pop_back();
+        }
+      $$.c = $1.c + $1.c + "@" + "1" + "+" + "="; 
+    }  
     | '(' _FPSETA EE
     | '(' PARAMs _FPSETA EE
     | F '.' _ID '=' EE { $$.c = $1.c + "@" + $3.c + $5.c + "[=]" + "^"; }
