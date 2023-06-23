@@ -114,6 +114,13 @@ CMD_FOR : _FOR '(' E_OPC ';' E_OPC ';' E_OPC ')' CMD
         ;
 
 CMD_WHILE : _WHILE '(' E ')' CMD
+          {
+            string lbl_fim = gera_label( "fim_while" ), lbl_true = gera_label( "then" );
+
+            $$.c = $3.c + lbl_true + "?" + lbl_fim + "#" + 
+                   (":" + lbl_true) + $5.c + $3.c + lbl_true + "?" + lbl_fim + "#" +  
+                   (":" + lbl_fim);
+          }
           ;
         
 E_OPC : E_V
