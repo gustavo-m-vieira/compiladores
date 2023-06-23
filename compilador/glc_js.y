@@ -109,8 +109,22 @@ CMD_IF : _IF '(' E ')' CMD _ELSE CMD
         }
        ;
     
-CMD_FOR : _FOR '(' E_OPC ';' E_OPC ';' E_OPC ')' CMD     
+CMD_FOR : _FOR '(' E_OPC ';' E_OPC ';' E_OPC ')' CMD
+        {
+            string lbl_fim = gera_label( "fim_for" ), lbl_true = gera_label( "then" );
+
+            $$.c =  $3.c + $5.c + lbl_true + "?" + lbl_fim + "#" + 
+                   (":" + lbl_true) + $9.c + $7.c + $5.c + lbl_true + "?" + lbl_fim + "#" +  
+                   (":" + lbl_fim);
+        }
         | _FOR '(' DECL_VAR ';' E_OPC ';' E_OPC ')' CMD     
+        {
+            string lbl_fim = gera_label( "fim_for" ), lbl_true = gera_label( "then" );
+
+            $$.c =  $3.c + $5.c + lbl_true + "?" + lbl_fim + "#" + 
+                   (":" + lbl_true) + $9.c + $7.c + $5.c + lbl_true + "?" + lbl_fim + "#" +  
+                   (":" + lbl_fim);
+        }
         ;
 
 CMD_WHILE : _WHILE '(' E ')' CMD
@@ -235,7 +249,13 @@ E   : _ID '=' EE
     { 
         $$.c =  $1.c + "@" + $3.c + $1.c + "@" + $3.c + "[@]" + $5.c + "+" + "=" + "^";
     }
-    | F '[' EE ']' '=' EE { $$.c = $1.c + $3.c + $6.c + "[=]" + "^"; }
+    | F '[' EE ']' '=' EE
+    {
+      if ( $3.c[$3.c.size()-1] == "^" ) {
+            $3.c.pop_back();
+        }
+      $$.c = $1.c + $3.c + $6.c + "[=]" + "^";
+    }
     | F '.' _ID '[' EE ']' '=' EE { $$.c = $1.c + $3.c + "[@]" + $5.c + $8.c + "[=]" + "^"; }
     | F '[' EE ']' _MAIS_IGUAL EE
     | F '.' _ID '[' EE ']' _MAIS_IGUAL EE
