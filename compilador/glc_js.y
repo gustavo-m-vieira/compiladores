@@ -226,7 +226,7 @@ E   : _ID '=' EE
     | F '[' EE ']' _MAIS_IGUAL EE
     | F '.' _ID '[' EE ']' _MAIS_IGUAL EE
     { 
-        // $$.c =  // pensar nisso amanha
+         $$.c =  $1.c + $3.c + "[@]" + $5.c + $1.c + $3.c + "[@]" + $5.c + "[@]" + $8.c + "+" + "[=]" + "^";
     }
     | EE '<' EE        { $$.c = $1.c + $3.c + "<"; }
     | EE '*' EE        { $$.c = $1.c + $3.c + "*"; }
