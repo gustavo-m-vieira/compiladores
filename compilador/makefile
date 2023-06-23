@@ -2,7 +2,7 @@ all: saida entrada.txt
 	./saida < entrada.txt
 
 saida: lex.yy.c y.tab.c main.cc
-	g++-11 main.cc -o saida -ll	-std=c++17
+	g++ main.cc -o saida -ll	-std=c++17
 	
 lex.yy.c: glc_js.lex
 	lex glc_js.lex
