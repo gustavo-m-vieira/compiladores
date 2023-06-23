@@ -152,8 +152,15 @@ VVARs : VVAR ',' VVARs     { $$.c = $1.c + $3.c; }
       ;
                     
 LVAR : _ID '=' EE     
-       { tenta_declarar_let( $1.c[0], $1.linha, $1.coluna );
-         $$.c = $1.c + "&" + $1.c + $3.c + "=" + "^"; }
+       { 
+        tenta_declarar_let( $1.c[0], $1.linha, $1.coluna );
+
+        if ( $3.c[0][0] == '-' ) {
+          $$.c = $1.c + "&" + $1.c + "0" + $3.c[0].substr(1) + "-" + "=" + "^";
+        } else {
+          $$.c = $1.c + "&" + $1.c + $3.c + "=" + "^";
+        }
+      }
      | _ID           
        { tenta_declarar_let( $1.c[0], $1.linha, $1.coluna );
          $$.c = $1.c + "&"; }
@@ -241,12 +248,7 @@ E   : _ID '=' EE
 
 F : _ID     { $$.c = $1.c + "@"; }
   | _NUM    {
-    if(includesChar($1.c[0], '-') || includesChar($1.c[0], '+')) {
-      $$.c.clear(); $$.c.push_back("'" + $1.c[0] + "'");
-    }
-    else {
       $$.c = $1.c;
-    }
   }
   | _STRING { $$.c = $1.c; }
   | '(' EE ')' { $$ = $2; } 
