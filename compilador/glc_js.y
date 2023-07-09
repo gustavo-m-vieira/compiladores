@@ -11,6 +11,7 @@ using namespace std;
 struct Atributos {
 vector<string> c;
 int linha, coluna;
+int contador; // contador de variáveis temporárias
 };
 
 struct Simbolo {
@@ -20,6 +21,7 @@ string tipo_decl; // "let", "const" e "var"
 
     // Pilha de Tabela de símbolos
 vector< map< string, Simbolo > > ts = { { } };
+vector<string> funcoes;
 
 // Tenta declarar uma variável "let", "var" ou "const"
 void tenta_declarar_let( string nome, int linha, int coluna );
@@ -53,7 +55,7 @@ void yyerror( const char* );
 %}
 
 // Tokens
-%token	 _ID _NUM _STRING _LET _VAR _CONST _FOR _FUNCTION _IF _ELSE _INC _RETURN _SETA _FPSETA _MAIS_IGUAL _IGUAL_IGUAL _MENOS_IGUAL _WHILE
+%token	 _ID _NUM _STRING _LET _VAR _CONST _FOR _FUNCTION _IF _ELSE _INC _RETURN _SETA _FPSETA _MAIS_IGUAL _IGUAL_IGUAL _MENOS_IGUAL _WHILE ASM
 
 %start  S
 
@@ -69,7 +71,7 @@ void yyerror( const char* );
 
 %%
 
-S : CMDs  { imprime_codigo( resolve_enderecos( $1.c + "." ) ); cout << endl;}
+S : CMDs  { imprime_codigo( resolve_enderecos( $1.c + "." + funcoes ) ); cout << endl;}
 ;
 
 CMDs : CMD CMDs             { $$.c = $1.c + $2.c; }
@@ -82,11 +84,12 @@ CMD : CMD_FOR
     | CMD_IF
     | CMD_WHILE
     | E_V ';'
-    | '{' CMD CMDs '}'     { $$.c = "<{" + $2.c + $3.c + "}>"; }    
-    | '{' '}'          {  $$.c.clear(); $$.c.push_back("<{}>"); }
+    | '{' NOVO_ESCOPO CMD CMDs '}' DESTROI_ESCOPO     { $$.c = "<{" + $3.c + $4.c + "}>"; }    
+    | '{' NOVO_ESCOPO CMDs '}' DESTROI_ESCOPO         {   $$.c = "<{" + $3.c + "}>"; }
     | ';'              { $$.c.clear(); }     
-    | _RETURN ';'
-    | _RETURN EE ';'
+    | _RETURN ';' { $$.c = $$.c + "undefined" + "@" + "'&retorno'" + "@" + "~";}
+    | _RETURN EE ';' { $$.c = $2.c + "'&retorno'" + "@" + "~";}
+    | E ASM ';' 	{ $$.c = $1.c + $2.c; }
     ;
     
 CMD_IF : _IF '(' E ')' CMD _ELSE CMD
@@ -147,7 +150,35 @@ DECL_VAR : _LET LVARs    { $$ = $2; }
          ;
         
 DECL_FUN : _FUNCTION _ID '(' ')' '{' NOVO_ESCOPO  CMDs '}' DESTROI_ESCOPO
+          { 
+             string lbl_func = gera_label( "func_" + $2.c[0] );
+             funcoes = funcoes + (":" + lbl_func) + $7.c;
+             
+             // Código para declarar o objeto função. Exemplo:
+             // mdc & mdc {} = '&funcao' 21 [=] ^
+             $$.c = $2.c + "&" + $2.c + "{}" + "=" + "'&funcao'" + lbl_func +
+                    "[=]" + "^";
+             
+             // Toda função deve retorna undefined se não retornar nada
+             // undefined @ '&retorno' @ ~
+             //$$.c = $$.c + "undefined" + "@" + "'&retorno'" + "@" + "~";
+             funcoes = funcoes + "undefined" + "@" + "'&retorno'" + "@" + "~";
+           }
          | _FUNCTION _ID '(' NOVO_ESCOPO PARAMs ')' '{'  CMDs '}' DESTROI_ESCOPO
+           { 
+             string lbl_func = gera_label( "func_" + $2.c[0] );
+             funcoes = funcoes + (":" + lbl_func) + $5.c + $8.c;
+             
+             // Código para declarar o objeto função. Exemplo:
+             // mdc & mdc {} = '&funcao' 21 [=] ^
+             $$.c = $2.c + "&" + $2.c + "{}" + "=" + "'&funcao'" + lbl_func +
+                    "[=]" + "^";
+             
+             // Toda função deve retorna undefined se não retornar nada
+             // undefined @ '&retorno' @ ~
+             //$$.c = $$.c + "undefined" + "@" + "'&retorno'" + "@" + "~";
+             funcoes = funcoes + "undefined" + "@" + "'&retorno'" + "@" + "~";
+           }
          ;
          
 NOVO_ESCOPO :   { ts.push_back( {} ); } 
@@ -156,13 +187,19 @@ NOVO_ESCOPO :   { ts.push_back( {} ); }
 DESTROI_ESCOPO : { ts.pop_back(); }
                ;
          
-PARAMs : PARAM ','PARAMs
-       | PARAM
+
+       // a & a arguments @ 0 [@] = ^
+PARAMs : PARAMs ',' _ID  
+         { $$.c = $1.c + $3.c + "&" + $3.c + "arguments" + "@" +
+                  to_string( $1.contador ) + "[@]" + "=" + "^";
+           $$.contador = $1.contador + 1; }
+       | _ID 
+         { $$.c = $1.c + "&" + $1.c + "arguments" + "@" + "0" +
+                  "[@]" + "=" + "^";
+           $$.contador = 1; }
+       | PARAMs ',' _ID '=' E
+       | _ID '=' E
        ;
-       
-PARAM : _ID '=' EE
-      | _ID
-      ;
      
 LVARs : LVAR ',' LVARs     { $$.c = $1.c + $3.c; }
       | LVAR
@@ -292,12 +329,12 @@ F : _ID     { $$.c = $1.c + "@"; }
   }
   | _STRING { $$.c = $1.c; }
   | '(' EE ')' { $$ = $2; } 
-  | F '(' ')'
-  | F '[' EE ']' {
+  | F '(' ')'  { $$.c = to_string( 0 ) +  $1.c + "$"; }
+  | EE '[' EE ']' {
     $$.c = $1.c + $3.c + "[@]";
   }
   | F '[' EE ']' '[' EE ']' { $$.c = $1.c + $3.c + "[@]" + $6.c +  "[@]"; }
-  | F '(' ARGs ')'
+  | F '(' ARGs ')' { $$.c = $3.c + to_string( $3.contador ) +  $1.c + "$"; }
   | '[' ']' { $$.c.clear(); $$.c.push_back("[]");}
   | '[' ARGs ']' { $$.c = $1.c + $3.c + "[@]"; }
   | '{' CAMPOs '}' 
@@ -315,9 +352,9 @@ CAMPOs : CAMPOs ',' CAMPOs
       ;
     
 
-ARGs : EE ',' ARGs
-    | EE
-    ;
+ARGs : EE ',' ARGs { $$.c = $1.c + $3.c; $$.contador = $1.contador + $3.contador; }
+     | EE { $$.c = $1.c; $$.contador = 1; }
+     ;
 
 %%
 
