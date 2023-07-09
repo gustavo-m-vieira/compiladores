@@ -365,7 +365,17 @@ E   : _ID '=' EE
     | EE '/' EE        { $$.c = $1.c + $3.c + "/"; }
     | EE '>' EE        { $$.c = $1.c + $3.c + ">"; }
     | EE '%' EE        { $$.c = $1.c + $3.c + "%"; }
-    | EE _IGUAL_IGUAL EE     { $$.c = $1.c + $3.c + "=="; }
+    | EE _IGUAL_IGUAL EE     {
+      if ( $1.c[$1.c.size()-1] == "^" ) {
+            $1.c.pop_back();
+        }
+      
+      if ( $3.c[$3.c.size()-1] == "^" ) {
+            $3.c.pop_back();
+        }
+
+      $$.c = $1.c + $3.c + "==";
+      }
     | F
     ;
 
@@ -382,6 +392,7 @@ F : _ID     { $$.c = $1.c + "@"; }
   | F '[' EE ']' '[' EE ']' { $$.c = $1.c + $3.c + "[@]" + $6.c +  "[@]"; }
   | F '(' ARGs ')' { $$.c = $3.c + to_string( $3.contador ) +  $1.c + "$" + "^"; }
   | F '.' _ID '.' _ID '[' EE ']' '(' ARGs ')' { $$.c = $10.c + to_string( $10.contador ) + ( $1.c + $3.c + "[@]" + $5.c + "[@]" + $7.c + "[@]") + "$" + "^"; }
+  | F '.' _ID '[' EE ']' '(' ARGs ')' { $$.c = $8.c + to_string( $8.contador ) + ( $1.c + $3.c + "[@]" + $5.c + "[@]" ) + "$" + "^"; }
   | '[' ']' { $$.c.clear(); $$.c.push_back("[]");}
   | '[' ARGs ']' { $$.c = $1.c + $3.c + "[@]"; }
   | '{' CAMPOs '}' 
@@ -510,7 +521,7 @@ void checa_ja_declarou(string nome, int linha, int coluna) {
         if( get_nome(nome).tipo_decl == "const" ) 
             erro("Erro: a variável '" + nome + "' já foi declarada na linha " + to_string( ts.back()[nome].linha ) + ".");
     } else {
-        cout << "linha: " << linha << " coluna: " << coluna << endl;
+        // cout << "linha: " << linha << " coluna: " << coluna << endl;
 
         erro("Erro: a variável '" + nome + "' não foi declarada.");
     }

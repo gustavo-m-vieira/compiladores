@@ -143,54 +143,55 @@ Grammar
    81  | F '[' EE ']' '[' EE ']'
    82  | F '(' ARGs ')'
    83  | F '.' _ID '.' _ID '[' EE ']' '(' ARGs ')'
-   84  | '[' ']'
-   85  | '[' ARGs ']'
-   86  | '{' CAMPOs '}'
-   87  | F '.' _ID
-   88  | FUNC_ANON
-   89  | _TRUE
-   90  | _FALSE
+   84  | F '.' _ID '[' EE ']' '(' ARGs ')'
+   85  | '[' ']'
+   86  | '[' ARGs ']'
+   87  | '{' CAMPOs '}'
+   88  | F '.' _ID
+   89  | FUNC_ANON
+   90  | _TRUE
+   91  | _FALSE
 
-   91 FUNC_ANON: _FUNCTION '(' ')' '{' CMDs '}'
-   92          | _FUNCTION '(' PARAMs ')' '{' CMDs '}'
+   92 FUNC_ANON: _FUNCTION '(' ')' '{' CMDs '}'
+   93          | _FUNCTION '(' PARAMs ')' '{' CMDs '}'
 
-   93 CAMPOs: CAMPOs ',' CAMPOs
-   94       | _ID ':' EE
+   94 CAMPOs: CAMPOs ',' CAMPOs
+   95       | _ID ':' EE
 
-   95 ARGs: EE ',' ARGs
-   96     | EE
+   96 ARGs: EE ',' ARGs
+   97     | EE
 
 
 Terminals, with rules where they appear
 
     $end (0) 0
     '%' (37) 72
-    '(' (40) 16 17 18 19 20 26 27 55 56 78 79 82 83 91 92
-    ')' (41) 16 17 18 19 20 26 27 78 79 82 83 91 92
+    '(' (40) 16 17 18 19 20 26 27 55 56 78 79 82 83 84 92 93
+    ')' (41) 16 17 18 19 20 26 27 78 79 82 83 84 92 93
     '*' (42) 67
     '+' (43) 68
-    ',' (44) 31 33 35 37 43 45 93 95
+    ',' (44) 31 33 35 37 43 45 94 96
     '-' (45) 69
-    '.' (46) 57 58 59 62 63 65 83 87
+    '.' (46) 57 58 59 62 63 65 83 84 88
     '/' (47) 70
-    ':' (58) 94
+    ':' (58) 95
     ';' (59) 3 9 12 13 14 15 18 19
     '<' (60) 66
     '=' (61) 33 34 39 41 43 44 49 57 58 60 61 62 63
     '>' (62) 71
-    '[' (91) 60 61 62 63 64 65 80 81 83 84 85
-    ']' (93) 60 61 62 63 64 65 80 81 83 84 85
-    '{' (123) 10 11 26 27 48 53 86 91 92
-    '}' (125) 10 11 26 27 48 53 86 91 92
+    '[' (91) 60 61 62 63 64 65 80 81 83 84 85 86
+    ']' (93) 60 61 62 63 64 65 80 81 83 84 85 86
+    '{' (123) 10 11 26 27 48 53 87 92 93
+    '}' (125) 10 11 26 27 48 53 87 92 93
     error (256)
-    _ID (258) 26 27 31 32 33 34 39 40 41 42 43 44 49 50 51 52 53 57 58 59 62 63 65 75 83 87 94
+    _ID (258) 26 27 31 32 33 34 39 40 41 42 43 44 49 50 51 52 53 57 58 59 62 63 65 75 83 84 88 95
     _NUM (259) 76
     _STRING (260) 77
     _LET (261) 23
     _VAR (262) 24
     _CONST (263) 25
     _FOR (264) 18 19
-    _FUNCTION (265) 26 27 91 92
+    _FUNCTION (265) 26 27 92 93
     _IF (266) 16 17
     _ELSE (267) 16
     _INC (268) 54
@@ -202,8 +203,8 @@ Terminals, with rules where they appear
     _MENOS_IGUAL (274) 51
     _WHILE (275) 20
     ASM (276) 15
-    _TRUE (277) 89
-    _FALSE (278) 90
+    _TRUE (277) 90
+    _FALSE (278) 91
     _AND (279)
     _OR (280)
     _NOT (281)
@@ -240,7 +241,7 @@ Nonterminals, with rules where they appear
         on right: 0
     CMDs (69)
         on left: 2 3 4 5
-        on right: 1 2 3 4 10 11 26 27 53 91 92
+        on right: 1 2 3 4 10 11 26 27 53 92 93
     CMD (70)
         on left: 6 7 8 9 10 11 12 13 14 15
         on right: 2 10 16 17 18 19 20 53
@@ -273,7 +274,7 @@ Nonterminals, with rules where they appear
         on right: 10 11 26 27
     PARAMs (80)
         on left: 31 32 33 34
-        on right: 27 31 33 56 92
+        on right: 27 31 33 56 93
     LVARs (81)
         on left: 35 36
         on right: 23 35
@@ -294,22 +295,22 @@ Nonterminals, with rules where they appear
         on right: 9 21 45
     EE (87)
         on left: 47 48
-        on right: 14 39 41 43 44 49 50 51 52 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 78 80 81 83 94 95 96
+        on right: 14 39 41 43 44 49 50 51 52 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 78 80 81 83 84 95 96 97
     E (88)
         on left: 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74
         on right: 15 16 17 20 33 34 45 46 47
     F (89)
-        on left: 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90
-        on right: 57 58 59 60 61 62 63 64 65 74 79 80 81 82 83 87
+        on left: 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91
+        on right: 57 58 59 60 61 62 63 64 65 74 79 80 81 82 83 84 88
     FUNC_ANON (90)
-        on left: 91 92
-        on right: 88
+        on left: 92 93
+        on right: 89
     CAMPOs (91)
-        on left: 93 94
-        on right: 86 93
+        on left: 94 95
+        on right: 87 94
     ARGs (92)
-        on left: 95 96
-        on right: 82 83 85 95
+        on left: 96 97
+        on right: 82 83 84 86 96
 
 
 State 0
@@ -423,8 +424,8 @@ State 8
 
    26 DECL_FUN: _FUNCTION . _ID CREATE_FUN '(' ')' '{' NOVO_ESCOPO CMDs '}' DESTROI_ESCOPO
    27         | _FUNCTION . _ID CREATE_FUN '(' NOVO_ESCOPO PARAMs ')' '{' CMDs '}' DESTROI_ESCOPO
-   91 FUNC_ANON: _FUNCTION . '(' ')' '{' CMDs '}'
-   92          | _FUNCTION . '(' PARAMs ')' '{' CMDs '}'
+   92 FUNC_ANON: _FUNCTION . '(' ')' '{' CMDs '}'
+   93          | _FUNCTION . '(' PARAMs ')' '{' CMDs '}'
 
     _ID  shift, and go to state 44
     '('  shift, and go to state 45
@@ -469,22 +470,22 @@ State 11
 
 State 12
 
-   89 F: _TRUE .
-
-    $default  reduce using rule 89 (F)
-
-
-State 13
-
-   90 F: _FALSE .
+   90 F: _TRUE .
 
     $default  reduce using rule 90 (F)
 
 
+State 13
+
+   91 F: _FALSE .
+
+    $default  reduce using rule 91 (F)
+
+
 State 14
 
-   84 F: '[' . ']'
-   85  | '[' . ARGs ']'
+   85 F: '[' . ']'
+   86  | '[' . ARGs ']'
 
     _ID        shift, and go to state 1
     _NUM       shift, and go to state 2
@@ -540,7 +541,7 @@ State 17
    10 CMD: '{' . NOVO_ESCOPO CMD CMDs '}' DESTROI_ESCOPO
    11    | '{' . NOVO_ESCOPO CMDs '}' DESTROI_ESCOPO
    48 EE: '{' . '}'
-   86 F: '{' . CAMPOs '}'
+   87 F: '{' . CAMPOs '}'
 
     _ID  shift, and go to state 60
     '}'  shift, and go to state 61
@@ -732,7 +733,8 @@ State 29
    81  | F . '[' EE ']' '[' EE ']'
    82  | F . '(' ARGs ')'
    83  | F . '.' _ID '.' _ID '[' EE ']' '(' ARGs ')'
-   87  | F . '.' _ID
+   84  | F . '.' _ID '[' EE ']' '(' ARGs ')'
+   88  | F . '.' _ID
 
     '['  shift, and go to state 80
     '('  shift, and go to state 81
@@ -743,9 +745,9 @@ State 29
 
 State 30
 
-   88 F: FUNC_ANON .
+   89 F: FUNC_ANON .
 
-    $default  reduce using rule 88 (F)
+    $default  reduce using rule 89 (F)
 
 
 State 31
@@ -939,8 +941,8 @@ State 44
 
 State 45
 
-   91 FUNC_ANON: _FUNCTION '(' . ')' '{' CMDs '}'
-   92          | _FUNCTION '(' . PARAMs ')' '{' CMDs '}'
+   92 FUNC_ANON: _FUNCTION '(' . ')' '{' CMDs '}'
+   93          | _FUNCTION '(' . PARAMs ')' '{' CMDs '}'
 
     _ID  shift, and go to state 98
     ')'  shift, and go to state 99
@@ -971,8 +973,8 @@ State 46
 
 State 47
 
-   91 FUNC_ANON: _FUNCTION . '(' ')' '{' CMDs '}'
-   92          | _FUNCTION . '(' PARAMs ')' '{' CMDs '}'
+   92 FUNC_ANON: _FUNCTION . '(' ')' '{' CMDs '}'
+   93          | _FUNCTION . '(' PARAMs ')' '{' CMDs '}'
 
     '('  shift, and go to state 45
 
@@ -987,7 +989,7 @@ State 48
 State 49
 
    48 EE: '{' . '}'
-   86 F: '{' . CAMPOs '}'
+   87 F: '{' . CAMPOs '}'
 
     _ID  shift, and go to state 60
     '}'  shift, and go to state 61
@@ -1049,9 +1051,9 @@ State 52
 
 State 53
 
-   84 F: '[' ']' .
+   85 F: '[' ']' .
 
-    $default  reduce using rule 84 (F)
+    $default  reduce using rule 85 (F)
 
 
 State 54
@@ -1065,8 +1067,8 @@ State 54
    71  | EE . '>' EE
    72  | EE . '%' EE
    73  | EE . _IGUAL_IGUAL EE
-   95 ARGs: EE . ',' ARGs
-   96     | EE .
+   96 ARGs: EE . ',' ARGs
+   97     | EE .
 
     _INC          shift, and go to state 69
     _IGUAL_IGUAL  shift, and go to state 70
@@ -1079,12 +1081,12 @@ State 54
     '/'           shift, and go to state 76
     '%'           shift, and go to state 77
 
-    $default  reduce using rule 96 (ARGs)
+    $default  reduce using rule 97 (ARGs)
 
 
 State 55
 
-   85 F: '[' ARGs . ']'
+   86 F: '[' ARGs . ']'
 
     ']'  shift, and go to state 105
 
@@ -1167,7 +1169,7 @@ State 59
 
 State 60
 
-   94 CAMPOs: _ID . ':' EE
+   95 CAMPOs: _ID . ':' EE
 
     ':'  shift, and go to state 111
 
@@ -1220,8 +1222,8 @@ State 62
 
 State 63
 
-   86 F: '{' CAMPOs . '}'
-   93 CAMPOs: CAMPOs . ',' CAMPOs
+   87 F: '{' CAMPOs . '}'
+   94 CAMPOs: CAMPOs . ',' CAMPOs
 
     ','  shift, and go to state 114
     '}'  shift, and go to state 115
@@ -1544,7 +1546,8 @@ State 82
    63  | F '.' . _ID '.' _ID '[' EE ']' '=' EE
    65  | F '.' . _ID '[' EE ']' _MAIS_IGUAL EE
    83 F: F '.' . _ID '.' _ID '[' EE ']' '(' ARGs ')'
-   87  | F '.' . _ID
+   84  | F '.' . _ID '[' EE ']' '(' ARGs ')'
+   88  | F '.' . _ID
 
     _ID  shift, and go to state 130
 
@@ -1553,7 +1556,7 @@ State 83
 
    48 EE: '{' . '}'
    53 E: _ID _SETA '{' . CMD CMDs '}'
-   86 F: '{' . CAMPOs '}'
+   87 F: '{' . CAMPOs '}'
 
     _ID        shift, and go to state 131
     _NUM       shift, and go to state 2
@@ -1822,7 +1825,7 @@ State 98
 
 State 99
 
-   91 FUNC_ANON: _FUNCTION '(' ')' . '{' CMDs '}'
+   92 FUNC_ANON: _FUNCTION '(' ')' . '{' CMDs '}'
 
     '{'  shift, and go to state 142
 
@@ -1831,7 +1834,7 @@ State 100
 
    31 PARAMs: PARAMs . ',' _ID
    33       | PARAMs . ',' _ID '=' E
-   92 FUNC_ANON: _FUNCTION '(' PARAMs . ')' '{' CMDs '}'
+   93 FUNC_ANON: _FUNCTION '(' PARAMs . ')' '{' CMDs '}'
 
     ','  shift, and go to state 109
     ')'  shift, and go to state 143
@@ -1867,7 +1870,7 @@ State 103
 
 State 104
 
-   95 ARGs: EE ',' . ARGs
+   96 ARGs: EE ',' . ARGs
 
     _ID        shift, and go to state 1
     _NUM       shift, and go to state 2
@@ -1888,9 +1891,9 @@ State 104
 
 State 105
 
-   85 F: '[' ARGs ']' .
+   86 F: '[' ARGs ']' .
 
-    $default  reduce using rule 85 (F)
+    $default  reduce using rule 86 (F)
 
 
 State 106
@@ -1977,7 +1980,7 @@ State 110
 
 State 111
 
-   94 CAMPOs: _ID ':' . EE
+   95 CAMPOs: _ID ':' . EE
 
     _ID        shift, and go to state 1
     _NUM       shift, and go to state 2
@@ -2043,7 +2046,7 @@ State 113
 
 State 114
 
-   93 CAMPOs: CAMPOs ',' . CAMPOs
+   94 CAMPOs: CAMPOs ',' . CAMPOs
 
     _ID  shift, and go to state 60
 
@@ -2052,9 +2055,9 @@ State 114
 
 State 115
 
-   86 F: '{' CAMPOs '}' .
+   87 F: '{' CAMPOs '}' .
 
-    $default  reduce using rule 86 (F)
+    $default  reduce using rule 87 (F)
 
 
 State 116
@@ -2307,16 +2310,17 @@ State 130
    63  | F '.' _ID . '.' _ID '[' EE ']' '=' EE
    65  | F '.' _ID . '[' EE ']' _MAIS_IGUAL EE
    83 F: F '.' _ID . '.' _ID '[' EE ']' '(' ARGs ')'
-   87  | F '.' _ID .
+   84  | F '.' _ID . '[' EE ']' '(' ARGs ')'
+   88  | F '.' _ID .
 
     _MAIS_IGUAL  shift, and go to state 156
     '='          shift, and go to state 157
     '['          shift, and go to state 158
     '.'          shift, and go to state 159
 
-    '['       [reduce using rule 87 (F)]
-    '.'       [reduce using rule 87 (F)]
-    $default  reduce using rule 87 (F)
+    '['       [reduce using rule 88 (F)]
+    '.'       [reduce using rule 88 (F)]
+    $default  reduce using rule 88 (F)
 
 
 State 131
@@ -2327,7 +2331,7 @@ State 131
    52  | _ID . _SETA EE
    53  | _ID . _SETA '{' CMD CMDs '}'
    75 F: _ID .
-   94 CAMPOs: _ID . ':' EE
+   95 CAMPOs: _ID . ':' EE
 
     _SETA         shift, and go to state 31
     _MAIS_IGUAL   shift, and go to state 32
@@ -2552,7 +2556,7 @@ State 141
 
 State 142
 
-   91 FUNC_ANON: _FUNCTION '(' ')' '{' . CMDs '}'
+   92 FUNC_ANON: _FUNCTION '(' ')' '{' . CMDs '}'
 
     _ID        shift, and go to state 1
     _NUM       shift, and go to state 2
@@ -2590,7 +2594,7 @@ State 142
 
 State 143
 
-   92 FUNC_ANON: _FUNCTION '(' PARAMs ')' . '{' CMDs '}'
+   93 FUNC_ANON: _FUNCTION '(' PARAMs ')' . '{' CMDs '}'
 
     '{'  shift, and go to state 167
 
@@ -2658,9 +2662,9 @@ State 145
 
 State 146
 
-   95 ARGs: EE ',' ARGs .
+   96 ARGs: EE ',' ARGs .
 
-    $default  reduce using rule 95 (ARGs)
+    $default  reduce using rule 96 (ARGs)
 
 
 State 147
@@ -2722,7 +2726,7 @@ State 150
    71  | EE . '>' EE
    72  | EE . '%' EE
    73  | EE . _IGUAL_IGUAL EE
-   94 CAMPOs: _ID ':' EE .
+   95 CAMPOs: _ID ':' EE .
 
     _INC          shift, and go to state 69
     _IGUAL_IGUAL  shift, and go to state 70
@@ -2734,7 +2738,7 @@ State 150
     '/'           shift, and go to state 76
     '%'           shift, and go to state 77
 
-    $default  reduce using rule 94 (CAMPOs)
+    $default  reduce using rule 95 (CAMPOs)
 
 
 State 151
@@ -2758,10 +2762,10 @@ State 152
 
 State 153
 
-   93 CAMPOs: CAMPOs . ',' CAMPOs
-   93       | CAMPOs ',' CAMPOs .
+   94 CAMPOs: CAMPOs . ',' CAMPOs
+   94       | CAMPOs ',' CAMPOs .
 
-    $default  reduce using rule 93 (CAMPOs)
+    $default  reduce using rule 94 (CAMPOs)
 
 
 State 154
@@ -2831,6 +2835,7 @@ State 158
 
    62 E: F '.' _ID '[' . EE ']' '=' EE
    65  | F '.' _ID '[' . EE ']' _MAIS_IGUAL EE
+   84 F: F '.' _ID '[' . EE ']' '(' ARGs ')'
 
     _ID        shift, and go to state 1
     _NUM       shift, and go to state 2
@@ -2905,14 +2910,14 @@ State 165
 
 State 166
 
-   91 FUNC_ANON: _FUNCTION '(' ')' '{' CMDs . '}'
+   92 FUNC_ANON: _FUNCTION '(' ')' '{' CMDs . '}'
 
     '}'  shift, and go to state 186
 
 
 State 167
 
-   92 FUNC_ANON: _FUNCTION '(' PARAMs ')' '{' . CMDs '}'
+   93 FUNC_ANON: _FUNCTION '(' PARAMs ')' '{' . CMDs '}'
 
     _ID        shift, and go to state 1
     _NUM       shift, and go to state 2
@@ -3128,6 +3133,7 @@ State 178
    71  | EE . '>' EE
    72  | EE . '%' EE
    73  | EE . _IGUAL_IGUAL EE
+   84 F: F '.' _ID '[' EE . ']' '(' ARGs ')'
 
     _INC          shift, and go to state 69
     _IGUAL_IGUAL  shift, and go to state 70
@@ -3234,14 +3240,14 @@ State 185
 
 State 186
 
-   91 FUNC_ANON: _FUNCTION '(' ')' '{' CMDs '}' .
+   92 FUNC_ANON: _FUNCTION '(' ')' '{' CMDs '}' .
 
-    $default  reduce using rule 91 (FUNC_ANON)
+    $default  reduce using rule 92 (FUNC_ANON)
 
 
 State 187
 
-   92 FUNC_ANON: _FUNCTION '(' PARAMs ')' '{' CMDs . '}'
+   93 FUNC_ANON: _FUNCTION '(' PARAMs ')' '{' CMDs . '}'
 
     '}'  shift, and go to state 201
 
@@ -3376,9 +3382,11 @@ State 194
 
    62 E: F '.' _ID '[' EE ']' . '=' EE
    65  | F '.' _ID '[' EE ']' . _MAIS_IGUAL EE
+   84 F: F '.' _ID '[' EE ']' . '(' ARGs ')'
 
     _MAIS_IGUAL  shift, and go to state 204
     '='          shift, and go to state 205
+    '('          shift, and go to state 206
 
 
 State 195
@@ -3395,7 +3403,7 @@ State 195
     '('        shift, and go to state 15
     '{'        shift, and go to state 49
 
-    EE         go to state 206
+    EE         go to state 207
     E          go to state 51
     F          go to state 29
     FUNC_ANON  go to state 30
@@ -3416,7 +3424,7 @@ State 196
     '('        shift, and go to state 15
     '{'        shift, and go to state 49
 
-    EE         go to state 207
+    EE         go to state 208
     E          go to state 51
     F          go to state 29
     FUNC_ANON  go to state 30
@@ -3426,14 +3434,14 @@ State 197
 
    18 CMD_FOR: _FOR '(' E_OPC ';' E_OPC ';' E_OPC . ')' CMD
 
-    ')'  shift, and go to state 208
+    ')'  shift, and go to state 209
 
 
 State 198
 
    19 CMD_FOR: _FOR '(' DECL_VAR ';' E_OPC ';' E_OPC . ')' CMD
 
-    ')'  shift, and go to state 209
+    ')'  shift, and go to state 210
 
 
 State 199
@@ -3460,7 +3468,7 @@ State 199
 
     $default  reduce using rule 5 (CMDs)
 
-    CMDs       go to state 210
+    CMDs       go to state 211
     CMD        go to state 20
     CMD_IF     go to state 21
     CMD_FOR    go to state 22
@@ -3478,14 +3486,14 @@ State 200
 
    27 DECL_FUN: _FUNCTION _ID CREATE_FUN '(' NOVO_ESCOPO PARAMs ')' . '{' CMDs '}' DESTROI_ESCOPO
 
-    '{'  shift, and go to state 211
+    '{'  shift, and go to state 212
 
 
 State 201
 
-   92 FUNC_ANON: _FUNCTION '(' PARAMs ')' '{' CMDs '}' .
+   93 FUNC_ANON: _FUNCTION '(' PARAMs ')' '{' CMDs '}' .
 
-    $default  reduce using rule 92 (FUNC_ANON)
+    $default  reduce using rule 93 (FUNC_ANON)
 
 
 State 202
@@ -3500,7 +3508,7 @@ State 203
    61 E: F '[' EE ']' '[' EE ']' . '=' EE
    81 F: F '[' EE ']' '[' EE ']' .
 
-    '='  shift, and go to state 212
+    '='  shift, and go to state 213
 
     $default  reduce using rule 81 (F)
 
@@ -3519,7 +3527,7 @@ State 204
     '('        shift, and go to state 15
     '{'        shift, and go to state 49
 
-    EE         go to state 213
+    EE         go to state 214
     E          go to state 51
     F          go to state 29
     FUNC_ANON  go to state 30
@@ -3539,13 +3547,34 @@ State 205
     '('        shift, and go to state 15
     '{'        shift, and go to state 49
 
-    EE         go to state 214
+    EE         go to state 215
     E          go to state 51
     F          go to state 29
     FUNC_ANON  go to state 30
 
 
 State 206
+
+   84 F: F '.' _ID '[' EE ']' '(' . ARGs ')'
+
+    _ID        shift, and go to state 1
+    _NUM       shift, and go to state 2
+    _STRING    shift, and go to state 3
+    _FUNCTION  shift, and go to state 47
+    _TRUE      shift, and go to state 12
+    _FALSE     shift, and go to state 13
+    '['        shift, and go to state 14
+    '('        shift, and go to state 15
+    '{'        shift, and go to state 49
+
+    EE         go to state 54
+    E          go to state 51
+    F          go to state 29
+    FUNC_ANON  go to state 30
+    ARGs       go to state 216
+
+
+State 207
 
    54 E: EE . _INC
    58  | F '.' _ID '.' _ID '=' EE .
@@ -3571,7 +3600,7 @@ State 206
     $default  reduce using rule 58 (E)
 
 
-State 207
+State 208
 
    54 E: EE . _INC
    63  | F '.' _ID '.' _ID '[' EE . ']' '=' EE
@@ -3594,10 +3623,10 @@ State 207
     '*'           shift, and go to state 75
     '/'           shift, and go to state 76
     '%'           shift, and go to state 77
-    ']'           shift, and go to state 215
+    ']'           shift, and go to state 217
 
 
-State 208
+State 209
 
    18 CMD_FOR: _FOR '(' E_OPC ';' E_OPC ';' E_OPC ')' . CMD
 
@@ -3616,7 +3645,7 @@ State 208
     ';'        shift, and go to state 16
     '{'        shift, and go to state 17
 
-    CMD        go to state 216
+    CMD        go to state 218
     CMD_IF     go to state 21
     CMD_FOR    go to state 22
     CMD_WHILE  go to state 23
@@ -3627,7 +3656,7 @@ State 208
     FUNC_ANON  go to state 30
 
 
-State 209
+State 210
 
    19 CMD_FOR: _FOR '(' DECL_VAR ';' E_OPC ';' E_OPC ')' . CMD
 
@@ -3646,7 +3675,7 @@ State 209
     ';'        shift, and go to state 16
     '{'        shift, and go to state 17
 
-    CMD        go to state 217
+    CMD        go to state 219
     CMD_IF     go to state 21
     CMD_FOR    go to state 22
     CMD_WHILE  go to state 23
@@ -3657,14 +3686,14 @@ State 209
     FUNC_ANON  go to state 30
 
 
-State 210
+State 211
 
    26 DECL_FUN: _FUNCTION _ID CREATE_FUN '(' ')' '{' NOVO_ESCOPO CMDs . '}' DESTROI_ESCOPO
 
-    '}'  shift, and go to state 218
+    '}'  shift, and go to state 220
 
 
-State 211
+State 212
 
    27 DECL_FUN: _FUNCTION _ID CREATE_FUN '(' NOVO_ESCOPO PARAMs ')' '{' . CMDs '}' DESTROI_ESCOPO
 
@@ -3688,7 +3717,7 @@ State 211
 
     $default  reduce using rule 5 (CMDs)
 
-    CMDs       go to state 219
+    CMDs       go to state 221
     CMD        go to state 20
     CMD_IF     go to state 21
     CMD_FOR    go to state 22
@@ -3702,7 +3731,7 @@ State 211
     FUNC_ANON  go to state 30
 
 
-State 212
+State 213
 
    61 E: F '[' EE ']' '[' EE ']' '=' . EE
 
@@ -3716,13 +3745,13 @@ State 212
     '('        shift, and go to state 15
     '{'        shift, and go to state 49
 
-    EE         go to state 220
+    EE         go to state 222
     E          go to state 51
     F          go to state 29
     FUNC_ANON  go to state 30
 
 
-State 213
+State 214
 
    54 E: EE . _INC
    65  | F '.' _ID '[' EE ']' _MAIS_IGUAL EE .
@@ -3748,7 +3777,7 @@ State 213
     $default  reduce using rule 65 (E)
 
 
-State 214
+State 215
 
    54 E: EE . _INC
    62  | F '.' _ID '[' EE ']' '=' EE .
@@ -3774,46 +3803,53 @@ State 214
     $default  reduce using rule 62 (E)
 
 
-State 215
+State 216
+
+   84 F: F '.' _ID '[' EE ']' '(' ARGs . ')'
+
+    ')'  shift, and go to state 223
+
+
+State 217
 
    63 E: F '.' _ID '.' _ID '[' EE ']' . '=' EE
    83 F: F '.' _ID '.' _ID '[' EE ']' . '(' ARGs ')'
 
-    '='  shift, and go to state 221
-    '('  shift, and go to state 222
+    '='  shift, and go to state 224
+    '('  shift, and go to state 225
 
 
-State 216
+State 218
 
    18 CMD_FOR: _FOR '(' E_OPC ';' E_OPC ';' E_OPC ')' CMD .
 
     $default  reduce using rule 18 (CMD_FOR)
 
 
-State 217
+State 219
 
    19 CMD_FOR: _FOR '(' DECL_VAR ';' E_OPC ';' E_OPC ')' CMD .
 
     $default  reduce using rule 19 (CMD_FOR)
 
 
-State 218
+State 220
 
    26 DECL_FUN: _FUNCTION _ID CREATE_FUN '(' ')' '{' NOVO_ESCOPO CMDs '}' . DESTROI_ESCOPO
 
     $default  reduce using rule 30 (DESTROI_ESCOPO)
 
-    DESTROI_ESCOPO  go to state 223
+    DESTROI_ESCOPO  go to state 226
 
 
-State 219
+State 221
 
    27 DECL_FUN: _FUNCTION _ID CREATE_FUN '(' NOVO_ESCOPO PARAMs ')' '{' CMDs . '}' DESTROI_ESCOPO
 
-    '}'  shift, and go to state 224
+    '}'  shift, and go to state 227
 
 
-State 220
+State 222
 
    54 E: EE . _INC
    61  | F '[' EE ']' '[' EE ']' '=' EE .
@@ -3839,7 +3875,14 @@ State 220
     $default  reduce using rule 61 (E)
 
 
-State 221
+State 223
+
+   84 F: F '.' _ID '[' EE ']' '(' ARGs ')' .
+
+    $default  reduce using rule 84 (F)
+
+
+State 224
 
    63 E: F '.' _ID '.' _ID '[' EE ']' '=' . EE
 
@@ -3853,13 +3896,13 @@ State 221
     '('        shift, and go to state 15
     '{'        shift, and go to state 49
 
-    EE         go to state 225
+    EE         go to state 228
     E          go to state 51
     F          go to state 29
     FUNC_ANON  go to state 30
 
 
-State 222
+State 225
 
    83 F: F '.' _ID '.' _ID '[' EE ']' '(' . ARGs ')'
 
@@ -3877,26 +3920,26 @@ State 222
     E          go to state 51
     F          go to state 29
     FUNC_ANON  go to state 30
-    ARGs       go to state 226
+    ARGs       go to state 229
 
 
-State 223
+State 226
 
    26 DECL_FUN: _FUNCTION _ID CREATE_FUN '(' ')' '{' NOVO_ESCOPO CMDs '}' DESTROI_ESCOPO .
 
     $default  reduce using rule 26 (DECL_FUN)
 
 
-State 224
+State 227
 
    27 DECL_FUN: _FUNCTION _ID CREATE_FUN '(' NOVO_ESCOPO PARAMs ')' '{' CMDs '}' . DESTROI_ESCOPO
 
     $default  reduce using rule 30 (DESTROI_ESCOPO)
 
-    DESTROI_ESCOPO  go to state 227
+    DESTROI_ESCOPO  go to state 230
 
 
-State 225
+State 228
 
    54 E: EE . _INC
    63  | F '.' _ID '.' _ID '[' EE ']' '=' EE .
@@ -3922,21 +3965,21 @@ State 225
     $default  reduce using rule 63 (E)
 
 
-State 226
+State 229
 
    83 F: F '.' _ID '.' _ID '[' EE ']' '(' ARGs . ')'
 
-    ')'  shift, and go to state 228
+    ')'  shift, and go to state 231
 
 
-State 227
+State 230
 
    27 DECL_FUN: _FUNCTION _ID CREATE_FUN '(' NOVO_ESCOPO PARAMs ')' '{' CMDs '}' DESTROI_ESCOPO .
 
     $default  reduce using rule 27 (DECL_FUN)
 
 
-State 228
+State 231
 
    83 F: F '.' _ID '.' _ID '[' EE ']' '(' ARGs ')' .
 
