@@ -158,10 +158,10 @@ DECL_VAR : _LET LVARs    { $$ = $2; }
          | _CONST CTEs   { $$ = $2; } 
          ;
         
-DECL_FUN : _FUNCTION _ID '(' ')' '{' NOVO_ESCOPO  CMDs '}' DESTROI_ESCOPO
+DECL_FUN : _FUNCTION _ID CREATE_FUN '(' ')' '{' NOVO_ESCOPO  CMDs '}' DESTROI_ESCOPO
           { 
              string lbl_func = gera_label( "func_" + $2.c[0] );
-             funcoes = funcoes + (":" + lbl_func) + $7.c;
+             funcoes = funcoes + (":" + lbl_func) + $8.c;
              
              // Código para declarar o objeto função. Exemplo:
              // mdc & mdc {} = '&funcao' 21 [=] ^
@@ -173,10 +173,12 @@ DECL_FUN : _FUNCTION _ID '(' ')' '{' NOVO_ESCOPO  CMDs '}' DESTROI_ESCOPO
              //$$.c = $$.c + "undefined" + "@" + "'&retorno'" + "@" + "~";
              funcoes = funcoes + "undefined" + "@" + "'&retorno'" + "@" + "~";
            }
-         | _FUNCTION _ID '(' NOVO_ESCOPO PARAMs ')' '{'  CMDs '}' DESTROI_ESCOPO
+         | _FUNCTION _ID CREATE_FUN '(' NOVO_ESCOPO PARAMs ')' '{'  CMDs '}' DESTROI_ESCOPO
            { 
+            // ts.back()[$2.c[0]] = Simbolo{ linha, coluna, "function" }; 
+
              string lbl_func = gera_label( "func_" + $2.c[0] );
-             funcoes = funcoes + (":" + lbl_func) + $5.c + $8.c;
+             funcoes = funcoes + (":" + lbl_func) + $6.c + $9.c;
              
              // Código para declarar o objeto função. Exemplo:
              // mdc & mdc {} = '&funcao' 21 [=] ^
@@ -189,7 +191,10 @@ DECL_FUN : _FUNCTION _ID '(' ')' '{' NOVO_ESCOPO  CMDs '}' DESTROI_ESCOPO
              funcoes = funcoes + "undefined" + "@" + "'&retorno'" + "@" + "~";
            }
          ;
-         
+
+CREATE_FUN: { ts.back()[yylval.c[0]] = Simbolo{ linha, coluna, "var" }; }
+          ;
+
 NOVO_ESCOPO :   { ts.push_back( {} ); } 
             ;
             
@@ -499,6 +504,8 @@ void checa_ja_declarou(string nome, int linha, int coluna) {
         if( get_nome(nome).tipo_decl == "const" ) 
             erro("Erro: a variável '" + nome + "' já foi declarada na linha " + to_string( ts.back()[nome].linha ) + ".");
     } else {
+        cout << "linha: " << linha << " coluna: " << coluna << endl;
+
         erro("Erro: a variável '" + nome + "' não foi declarada.");
     }
 }
