@@ -43,6 +43,8 @@ FPSETA ")"[\n\t ]*"=>"
 "function"  { acerta_coluna(); return _FUNCTION; }
 "return"    { acerta_coluna(); return _RETURN; }
 "while"     { acerta_coluna(); return _WHILE; }
+"true"     { acerta_coluna(); return _TRUE; }
+"false"     { acerta_coluna(); return _FALSE; }
 
 "++"        { acerta_coluna(); return _INC; }
 "+="       { acerta_coluna(); return _MAIS_IGUAL; }

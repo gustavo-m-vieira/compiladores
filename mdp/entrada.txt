@@ -1,6 +1,6 @@
-c & c [] = ^
-i & i 5 = ^
-j & j 2 = ^
-c @ i @ [] [=] ^
-c @ i @ [@] j @ 0 [=] ^
-.
+a &
+b & b [] = ^
+c & c -1 = ^
+b @ 0 true @ [=] ^
+print & print {} = '&funcao' 74 [=] ^
+b @ 0 [@] 38 ? 73 # <{ a & a 0 1 - = ^ <{ b & b {} = ^ b @ m 9 [=] ^ b @ 1 print @ $ }> a b @ = ^ }> . x & x arguments @ 0 [@] = ^ x @ println # undefined ^ 0 undefined . ^ 0 '&retorno' @ ~ undefined @ '&retorno' @ ~

@@ -38,6 +38,7 @@ vector<string> operator+( string a, vector<string> b );
 string gera_label( string prefixo );
 vector<string> resolve_enderecos( vector<string> entrada );
 bool includesChar(const std::string& str, char ch);
+vector<string> handle_neg(vector<string> c);
 
 int linha = 1;
 int coluna = 1;
@@ -55,7 +56,7 @@ void yyerror( const char* );
 %}
 
 // Tokens
-%token	 _ID _NUM _STRING _LET _VAR _CONST _FOR _FUNCTION _IF _ELSE _INC _RETURN _SETA _FPSETA _MAIS_IGUAL _IGUAL_IGUAL _MENOS_IGUAL _WHILE ASM
+%token	 _ID _NUM _STRING _LET _VAR _CONST _FOR _FUNCTION _IF _ELSE _INC _RETURN _SETA _FPSETA _MAIS_IGUAL _IGUAL_IGUAL _MENOS_IGUAL _WHILE ASM _TRUE _FALSE _AND _OR _NOT _EQ _NEQ _LT _GT _LEQ _GEQ _MOD _DIV _MULT _PLUS _MINUS _LPAREN _RPAREN _LBRACK _RBRACK _LBRACE _RBRACE _COMMA _SEMICOLON _DOT _COLON _EOF
 
 %start  S
 
@@ -213,11 +214,7 @@ LVAR : _ID '=' EE
        { 
         tenta_declarar_let( $1.c[0], $1.linha, $1.coluna );
 
-        if ( $3.c[0][0] == '-' ) {
-          $$.c = $1.c + "&" + $1.c + "0" + $3.c[0].substr(1) + "-" + "=" + "^";
-        } else {
-          $$.c = $1.c + "&" + $1.c + $3.c + "=" + "^";
-        }
+        $$.c = $1.c + "&" + $1.c + handle_neg($3.c) + "=" + "^";
       }
      | _ID           
        { tenta_declarar_let( $1.c[0], $1.linha, $1.coluna );
@@ -226,9 +223,9 @@ LVAR : _ID '=' EE
     
 VVAR : _ID '=' EE     
         { if( ja_declarou_var( $1.c[0], $1.linha, $1.coluna ) )
-            $$.c = $1.c + $3.c + "=" + "^";
+            $$.c = $1.c + handle_neg($3.c) + "=" + "^";
           else
-            $$.c = $1.c + "&" + $1.c + $3.c + "=" + "^"; }     
+            $$.c = $1.c + "&" + $1.c + handle_neg($3.c) + "=" + "^"; }     
      | _ID           
        { if( !ja_declarou_var( $1.c[0], $1.linha, $1.coluna ) )
            $$.c = $1.c + "&";
@@ -238,10 +235,10 @@ VVAR : _ID '=' EE
     
 CTEs : _ID '=' EE ',' CTEs
        { tenta_declarar_const( $1.c[0], $1.linha, $1.coluna );
-         $$.c = $1.c + "&" + $1.c + $3.c + "=" + "^"; }     
+         $$.c = $1.c + "&" + $1.c + handle_neg($3.c) + "=" + "^"; }     
      | _ID '=' EE
        { tenta_declarar_const( $1.c[0], $1.linha, $1.coluna );
-         $$.c = $1.c + "&" + $1.c + $3.c + "=" + "^"; }
+         $$.c = $1.c + "&" + $1.c + handle_neg($3.c) + "=" + "^"; }
      ;
   
 
@@ -259,7 +256,7 @@ E   : _ID '=' EE
         if ( $3.c[$3.c.size()-1] == "^" ) {
             $3.c.pop_back();
         }
-        $$.c = $1.c + $3.c + "=" + "^";
+        $$.c = $1.c + handle_neg($3.c) + "=" + "^";
     }
     | _ID _MAIS_IGUAL EE 
     {
@@ -291,7 +288,7 @@ E   : _ID '=' EE
       if ( $3.c[$3.c.size()-1] == "^" ) {
             $3.c.pop_back();
         }
-      $$.c = $1.c + $3.c + $6.c + "[=]" + "^";
+      $$.c = $1.c + $3.c + handle_neg($6.c) + "[=]" + "^";
     }
     | F '[' EE ']' '[' EE ']' '=' EE
     {
@@ -330,7 +327,7 @@ F : _ID     { $$.c = $1.c + "@"; }
   | _STRING { $$.c = $1.c; }
   | '(' EE ')' { $$ = $2; } 
   | F '(' ')'  { $$.c = to_string( 0 ) +  $1.c + "$"; }
-  | EE '[' EE ']' {
+  | F '[' EE ']' {
     $$.c = $1.c + $3.c + "[@]";
   }
   | F '[' EE ']' '[' EE ']' { $$.c = $1.c + $3.c + "[@]" + $6.c +  "[@]"; }
@@ -340,6 +337,8 @@ F : _ID     { $$.c = $1.c + "@"; }
   | '{' CAMPOs '}' 
   | F '.' _ID { $$.c = $1.c + $3.c + "[@]"; }
   | FUNC_ANON
+  | _TRUE { $$.c = $1.c ; }
+  | _FALSE { $$.c = $1.c ; }
   ;
 
 FUNC_ANON : _FUNCTION '(' ')' '{' CMDs '}' 
@@ -352,7 +351,7 @@ CAMPOs : CAMPOs ',' CAMPOs
       ;
     
 
-ARGs : EE ',' ARGs { $$.c = $1.c + $3.c; $$.contador = $1.contador + $3.contador; }
+ARGs : EE ',' ARGs { $$.c = $1.c + $3.c; $$.contador = 1 + $3.contador; }
      | EE { $$.c = $1.c; $$.contador = 1; }
      ;
 
@@ -458,4 +457,20 @@ void checa_ja_declarou(string nome, int linha, int coluna) {
 void erro( string msg ) {
     cout << msg << endl;
     exit( 1 );
+}
+
+vector<string> handle_neg(vector<string> c) {
+  vector<string> v;
+  v.clear();
+  string s = c[0];
+
+  if (s[0] == '-') {
+    v.push_back("0");
+    s = s.substr(1);
+    v.push_back(s);
+    v.push_back("-");
+    return v;
+  } else {
+    return c;
+  }
 }
