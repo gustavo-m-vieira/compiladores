@@ -1,14 +1,13 @@
-var a, b = [];
-const c = -1;
-b[0] = true;
-function print(x) { x asm{println # undefined};
-  0 asm{undefined .};
-  return 0;
+const a = 9;
+function log( msg ) {
+  msg asm{println # undefined};
 }
-if( b[0] ) { let a = -1; {
-   let b = { };
-    b.m = 9;
-    print( b );
-  }
-  a = b;
-}
+
+var c = [
+];
+(log)( c );
+{ let a = 3.1; }
+{ const a = 8;
+  let b = 7;
+  c = b; }
+var c = c+ c++;

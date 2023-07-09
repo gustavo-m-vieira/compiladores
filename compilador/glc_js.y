@@ -39,6 +39,8 @@ string gera_label( string prefixo );
 vector<string> resolve_enderecos( vector<string> entrada );
 bool includesChar(const std::string& str, char ch);
 vector<string> handle_neg(vector<string> c);
+Simbolo get_nome(string nome);
+bool find_nome(string nome);
 
 int linha = 1;
 int coluna = 1;
@@ -331,7 +333,7 @@ F : _ID     { $$.c = $1.c + "@"; }
     $$.c = $1.c + $3.c + "[@]";
   }
   | F '[' EE ']' '[' EE ']' { $$.c = $1.c + $3.c + "[@]" + $6.c +  "[@]"; }
-  | F '(' ARGs ')' { $$.c = $3.c + to_string( $3.contador ) +  $1.c + "$"; }
+  | F '(' ARGs ')' { $$.c = $3.c + to_string( $3.contador ) +  $1.c + "$" + "^"; }
   | '[' ']' { $$.c.clear(); $$.c.push_back("[]");}
   | '[' ARGs ']' { $$.c = $1.c + $3.c + "[@]"; }
   | '{' CAMPOs '}' 
@@ -351,9 +353,19 @@ CAMPOs : CAMPOs ',' CAMPOs
       ;
     
 
-ARGs : EE ',' ARGs { $$.c = $1.c + $3.c; $$.contador = 1 + $3.contador; }
-     | EE { $$.c = $1.c; $$.contador = 1; }
-     ;
+ARGs : EE ',' ARGs {
+      if ( $1.c[$1.c.size()-1] == "^" ) {
+        $1.c.pop_back();
+      };
+      $$.c = $1.c + $3.c; $$.contador = 1 + $3.contador;
+      }
+     | EE {
+      if ( $1.c[$1.c.size()-1] == "^" ) {
+        $1.c.pop_back();
+      };
+      $$.c = $1.c; $$.contador = 1;
+    }
+    ;
 
 %%
 
@@ -446,13 +458,36 @@ bool ja_declarou_var( string nome, int linha, int coluna ){
 }
 
 void checa_ja_declarou(string nome, int linha, int coluna) {
-    if( ts.back().count( nome ) > 0 ) {
-        if( ts.back()[nome].tipo_decl == "const" ) 
+    if( find_nome(nome) ) {
+        if( get_nome(nome).tipo_decl == "const" ) 
             erro("Erro: a variável '" + nome + "' já foi declarada na linha " + to_string( ts.back()[nome].linha ) + ".");
     } else {
         erro("Erro: a variável '" + nome + "' não foi declarada.");
     }
 }
+
+Simbolo get_nome(string nome) {
+  for (map <string, Simbolo> space : ts) {
+    if (space.count(nome) > 0) {
+      return space[nome];
+    }
+  }
+}
+
+bool find_nome(string nome) {
+  bool found = false;
+
+  for (const auto& space : ts) {
+    if (space.count(nome) > 0) {
+      found = true;
+      break;
+    }
+  }
+
+  return found;
+}
+
+
 
 void erro( string msg ) {
     cout << msg << endl;
