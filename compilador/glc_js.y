@@ -216,6 +216,10 @@ LVAR : _ID '=' EE
        { 
         tenta_declarar_let( $1.c[0], $1.linha, $1.coluna );
 
+        if ( $3.c[$3.c.size()-1] == "^" ) {
+          $3.c.pop_back();
+        };
+
         $$.c = $1.c + "&" + $1.c + handle_neg($3.c) + "=" + "^";
       }
      | _ID           
@@ -224,7 +228,11 @@ LVAR : _ID '=' EE
      ;
     
 VVAR : _ID '=' EE     
-        { if( ja_declarou_var( $1.c[0], $1.linha, $1.coluna ) )
+        { 
+          if ( $3.c[$3.c.size()-1] == "^" ) {
+            $3.c.pop_back();
+          };
+          if( ja_declarou_var( $1.c[0], $1.linha, $1.coluna ) )
             $$.c = $1.c + handle_neg($3.c) + "=" + "^";
           else
             $$.c = $1.c + "&" + $1.c + handle_neg($3.c) + "=" + "^"; }     
@@ -236,11 +244,21 @@ VVAR : _ID '=' EE
      ;
     
 CTEs : _ID '=' EE ',' CTEs
-       { tenta_declarar_const( $1.c[0], $1.linha, $1.coluna );
-         $$.c = $1.c + "&" + $1.c + handle_neg($3.c) + "=" + "^"; }     
+      {
+        if ( $3.c[$3.c.size()-1] == "^" ) {
+          $3.c.pop_back();
+        };
+        tenta_declarar_const( $1.c[0], $1.linha, $1.coluna );
+        $$.c = $1.c + "&" + $1.c + handle_neg($3.c) + "=" + "^";
+      }     
      | _ID '=' EE
-       { tenta_declarar_const( $1.c[0], $1.linha, $1.coluna );
-         $$.c = $1.c + "&" + $1.c + handle_neg($3.c) + "=" + "^"; }
+      {
+        if ( $3.c[$3.c.size()-1] == "^" ) {
+          $3.c.pop_back();
+        }; 
+        tenta_declarar_const( $1.c[0], $1.linha, $1.coluna );
+        $$.c = $1.c + "&" + $1.c + handle_neg($3.c) + "=" + "^";
+      }
      ;
   
 
