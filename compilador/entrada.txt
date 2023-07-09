@@ -1,10 +1,5 @@
-function f( x ) {
-  let b = f;
-  const h = [ ];
-  f = x;
-  return b ;
+function f( x, y, z ) {
+  let z;
+  return x*x + y;
 }
-
-let a;
-let g = f( a = [ ], {
-} );
+let f( 5.2, 7 );

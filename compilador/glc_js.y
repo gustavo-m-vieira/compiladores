@@ -192,7 +192,7 @@ DECL_FUN : _FUNCTION _ID CREATE_FUN '(' ')' '{' NOVO_ESCOPO  CMDs '}' DESTROI_ES
            }
          ;
 
-CREATE_FUN: { ts.back()[yylval.c[0]] = Simbolo{ linha, coluna, "var" }; }
+CREATE_FUN: { ts.back()[yylval.c[0]] = Simbolo{ linha, coluna, "function" }; }
           ;
 
 NOVO_ESCOPO :   { ts.push_back( {} ); } 
@@ -204,13 +204,19 @@ DESTROI_ESCOPO : { ts.pop_back(); }
 
        // a & a arguments @ 0 [@] = ^
 PARAMs : PARAMs ',' _ID  
-         { $$.c = $1.c + $3.c + "&" + $3.c + "arguments" + "@" +
+        { $$.c = $1.c + $3.c + "&" + $3.c + "arguments" + "@" +
                   to_string( $1.contador ) + "[@]" + "=" + "^";
-           $$.contador = $1.contador + 1; }
+           $$.contador = $1.contador + 1;
+
+            tenta_declarar_let( $3.c[0], $3.linha, $3.coluna );
+        }
        | _ID 
-         { $$.c = $1.c + "&" + $1.c + "arguments" + "@" + "0" +
+        { $$.c = $1.c + "&" + $1.c + "arguments" + "@" + "0" +
                   "[@]" + "=" + "^";
-           $$.contador = 1; }
+           $$.contador = 1;
+
+           tenta_declarar_let( $1.c[0], $1.linha, $1.coluna );
+        }
        | PARAMs ',' _ID '=' E
        | _ID '=' E
        ;

@@ -1,1 +1,1 @@
-f & f {} = '&funcao' 25 [=] ^ a & g & g a [] = {} 2 f @ $ = ^ . x & x arguments @ 0 [@] = ^ b & b f @ = ^ h & h [] = ^ f x @ = ^ b @ '&retorno' @ ~ undefined @ '&retorno' @ ~ 
+Erro: a variável 'z' já foi declarada na linha 1.
