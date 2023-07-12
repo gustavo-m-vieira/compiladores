@@ -1,4 +1,14 @@
 %{
+#include <string>
+#include <cctype>
+#include <iostream>
+#include <algorithm>
+#include <sstream>
+
+string trim(string str, string toRemove);
+vector<string> tokeniza(string str);
+string removeAsm(string str);
+
 void acerta_coluna();
 %}
 D	[0-9]
@@ -33,6 +43,8 @@ FPSETA ")"[\n\t ]*"=>"
 "function"  { acerta_coluna(); return _FUNCTION; }
 "return"    { acerta_coluna(); return _RETURN; }
 "while"     { acerta_coluna(); return _WHILE; }
+"true"     { acerta_coluna(); return _TRUE; }
+"false"     { acerta_coluna(); return _FALSE; }
 
 "++"        { acerta_coluna(); return _INC; }
 "+="       { acerta_coluna(); return _MAIS_IGUAL; }
@@ -42,6 +54,15 @@ FPSETA ")"[\n\t ]*"=>"
 {FPSETA}    { acerta_coluna(); return _FPSETA; }
 
 {ID}		{ acerta_coluna(); return _ID; }
+
+"asm{".*"}"  { 
+                coluna += strlen( yytext ); 
+                yylval.c = tokeniza( trim( removeAsm(yytext), "{}" ) ) + "^";
+               
+                yylval.linha = linha;
+                yylval.coluna = coluna;
+
+                return ASM; }
 
 .       	{ acerta_coluna(); return *yytext; }
 
@@ -53,4 +74,32 @@ void acerta_coluna() {
     yylval.c.push_back( yytext );
     yylval.linha = linha;
     yylval.coluna = coluna;
+}
+
+string trim(string str, string toRemove) {
+    // Função lambda para verificar se um caractere está presente em toRemove
+    auto isCaracterePresente = [&](char c) {
+        return (toRemove.find(c) != string::npos);
+    };
+
+    // Remover caracteres presentes em toRemove da str
+    str.erase(std::remove_if(str.begin(), str.end(), isCaracterePresente), str.end());
+
+    return str;
+}
+
+vector<string> tokeniza(string str) {
+    vector<string> tokens;
+    istringstream iss(str);
+    string token;
+
+    while (iss >> token) {
+        tokens.push_back(token);
+    }
+
+    return tokens;
+}
+
+string removeAsm(string str) {
+    return str.substr(3,str.length() -1 );
 }
